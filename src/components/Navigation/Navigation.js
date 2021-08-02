@@ -1,0 +1,24 @@
+import React from 'react';
+import './Navigation.css';
+import { Route, Link, Switch } from "react-router-dom";
+
+function Navigation() {
+  return (
+    <div className="header navigation">
+        <div className="navigation__contaner">
+            <div className="header__logo"/>
+                <nav className="navigation__links"> 
+                    <Link to="/movies" className="header__sign-up navigation__movies" >
+                        Фильмы
+                    </Link>
+                    <Link to="/saved-movies" className="header__sign-up navigation__saved-movies" >
+                        Сохранённые фильмы
+                    </Link>
+                </nav>
+        </div>
+        <button className="navigation__button">Аккаунт</button>
+    </div>
+  );
+}
+
+export default Navigation;

@@ -1,0 +1,41 @@
+.navigation{
+    background-color: #202020;
+}
+
+.navigation__contaner{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.navigation__links{ 
+    margin-left: 44px;
+}
+
+.navigation__movies{
+    margin-right: 16px;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 18px;
+}
+
+.navigation__saved-movies{
+    font-style: normal;
+    font-weight: normal;
+    font-size: 13px;
+    line-height: 18px;
+}
+
+.navigation__button{
+    width: 100px;
+    height: 32px;
+    border-radius: 20px;
+    background-color: #313131;
+    border: none;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 16px;
+    color: #FFFFFF;
+}
+
