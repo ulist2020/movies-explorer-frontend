@@ -1,0 +1,45 @@
+.header{
+    height: 74px;
+    background-color: #073042;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 70px 0 70px;
+}
+
+.header__logo{
+    background-image: url(../../images/logo.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 38px;
+    height: 38px;
+}
+
+.header-contaner{
+    display: flex;
+    align-items: center;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 12px;
+}
+
+.header__sign-up{
+    color: #FFFFFF;
+    text-decoration: none;
+    margin-right: 30px;
+    cursor: pointer;
+}
+
+.header__sign-in{
+    width: 76px;
+    height: 32px;
+    border-radius: 3px;
+    color: #000000;
+    text-decoration: none;
+    background-color: #3DDC84;
+    display:inline-flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}

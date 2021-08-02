@@ -1,54 +1,41 @@
-import './App.css';
 import React from 'react';
 import { Route, Switch } from "react-router-dom";
-import Header from './Header';
+import '../../index.css';
+import './App.css';
+import Header from '../Header/Header';
 import Promo from '../Main/Main';
 import Movies from '../Movies/Movies';
 import SavedMovies from '../SavedMovies/SavedMovies';
-import Profile from '../Profile';
-import Login from './Login';
-import Register from './Register';
-import Footer from './Footer';
+import Profile from '../Profile/Profile';
+import Login from '../Login/Login';
+import Register from '../Register/Register';
+import Footer from '../Footer/Footer';
 
 function App() {
   return (
-          <div className="page">
-            <div className="page__container">
-
+          <div className="app">
+            
               <Header/>
 
               <Switch>
                 <Route path="/">
-                  <Promo
-                      />
                 </Route>
                 <Route path="/movies">
-                  <Movies
-                    />
                 </Route>
                 <Route path="/saved-movies">
-                  <SavedMovies
-                    />
                 </Route>
                 <Route path="/profile">
-                  <Profile
-                    />
                 </Route>
                 <Route path="/sign-in">
-                  <Login
-                    />
                 </Route>
                 <Route path="/sign-up">
-                  <Register
-                    />
                 </Route>
               </Switch>
 
-              <Footer/>
 
 
             </div>
-          </div>
+          
   )
 }
 
