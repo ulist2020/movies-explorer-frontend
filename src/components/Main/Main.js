@@ -9,6 +9,7 @@ function Main() {
   return (
     <main className="main">
       <Promo />
+      <AboutProject />
     </main>
   )
 }
