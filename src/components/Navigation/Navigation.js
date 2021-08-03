@@ -17,6 +17,7 @@ function Navigation() {
                 </nav>
         </div>
         <button className="navigation__button">Аккаунт</button>
+        <div className="navigation__menu"/>
     </div>
   );
 }

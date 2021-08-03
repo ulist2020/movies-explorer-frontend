@@ -18,6 +18,8 @@
     font-weight: 500;
     font-size: 13px;
     line-height: 18px;
+    cursor: pointer;
+    transition: opacity linear 0.5s;
 }
 
 .navigation__saved-movies{
@@ -25,6 +27,8 @@
     font-weight: normal;
     font-size: 13px;
     line-height: 18px;
+    cursor: pointer;
+    transition: opacity linear 0.5s;
 }
 
 .navigation__button{
@@ -37,5 +41,61 @@
     font-size: 14px;
     line-height: 16px;
     color: #FFFFFF;
+    cursor: pointer;
+    transition: opacity linear 0.5s;
 }
 
+.navigation__menu{
+    display: none;
+    width: 44px;
+    height: 44px;
+    background-image: url(../../images/menu.png);
+    cursor: pointer;
+    transition: opacity linear 0.5s;
+}
+
+.navigation__movies:hover{
+    opacity: 0.6;
+}
+
+.navigation__saved-movies:hover{
+    opacity: 0.6;
+}
+
+.navigation__button:hover{
+    opacity: 0.6;
+}
+
+.navigation__menu:hover{
+    opacity: 0.6;
+}
+
+    @media screen and (min-width: 768px) and (max-width: 1023px){
+        .navigation__links{ 
+            display: none;
+        }
+
+        .navigation__button{
+            display: none;
+        }
+
+        .navigation__menu{
+            display: block;
+        }
+    }
+
+    @media screen and (max-width: 767px){
+        .navigation__links{ 
+            display: none;
+        }    
+        
+        .navigation__button{
+            display: none;
+        }
+
+        .navigation__menu{
+            display: block;
+            width: 40px;
+            height: 43px;
+        }
+    }
