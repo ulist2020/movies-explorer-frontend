@@ -3,7 +3,7 @@ import { Route, Switch } from "react-router-dom";
 import '../../index.css';
 import './App.css';
 import Header from '../Header/Header';
-import Promo from '../Main/Main';
+import Main from '../Main/Main';
 import Movies from '../Movies/Movies';
 import SavedMovies from '../SavedMovies/SavedMovies';
 import Profile from '../Profile/Profile';
@@ -18,8 +18,10 @@ function App() {
               <Header/>
 
               <Switch>
-                <Route path="/">
+                <Route exact path="/">
+                  <Main />
                 </Route>
+
                 <Route path="/movies">
                 </Route>
                 <Route path="/saved-movies">

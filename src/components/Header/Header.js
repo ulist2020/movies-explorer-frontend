@@ -25,6 +25,9 @@ function Header() {
         <Route path="/saved-movies">
             <Navigation/>
         </Route>
+        <Route path="/profile">
+            <Navigation/>
+        </Route>
     </Switch>
   );
 }
