@@ -33,7 +33,6 @@
     font-style: normal;
     font-weight: 400;
     font-size: 14px;
-    line-height: 17px;
     text-align: center;
     line-height: 60px;
 }
@@ -66,7 +65,6 @@
     .techs__technology{
         height: 57px;
         font-size: 12px;
-        line-height: 15px;
         line-height: 57px;
     }
 }
@@ -104,7 +102,6 @@
     .techs__technology{
         height: 57px;
         font-size: 12px;
-        line-height: 15px;
         line-height: 57px;
     }
 }
