@@ -1,15 +1,11 @@
 .promo{
     background-color: #073042;
-    height: 524px;
-    padding: 75px 70px 0 70px;
+    padding: 75px 70px 75px 70px;
 }
 
 .promo__contaner{
     display: flex;
     justify-content: space-between;
-}
-
-.promo__description{
 }
 
 .promo__title{
@@ -40,7 +36,7 @@
 }
 
 .promo__button{
-    margin-top: 146px;
+    margin-top: 84px;
     width: 129px;
     height: 36px;
     border: 1px solid #FFFFFF;
