@@ -17,11 +17,11 @@ function AboutProject() {
           <div className="project__time">
               <div className="project__time-front">
                   <p className="project__time-first">1 неделя</p>
-                  <p className="project__time-about">Back-end</p>
+                  <a href="https://github.com/ulist2020/movies-explorer-api" className="project__time-about">Back-end</a>
               </div>
               <div className="project__time-back">
                   <p className="project__time-second">4 недели</p>
-                  <p className="project__time-about">Front-end</p>
+                  <a href="https://github.com/ulist2020/movies-explorer-frontend" className="project__time-about">Front-end</a>
               </div>
           </div>
       </section>
