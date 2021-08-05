@@ -1,6 +1,5 @@
 
 .list__contaner{
-    padding: 0;
     display: grid;
     grid-template-columns: repeat(auto-fill, 270px);
     grid-template-rows: repeat(auto-fill, 229px);
@@ -12,25 +11,6 @@
     margin: 80px 0 80px 0;
 }
 
-.list__add{
-    width: 320px;
-    height: 36px;
-    margin: 0 auto;
-    display: block;
-    border: 1px solid #424242;
-    background-color: #202020;
-    border-radius: 4px;
-    font-style: normal;
-    font-weight: 500;
-    font-size: 12px;
-    line-height: 15px;
-    color: #FFFFFF;
-    transition: all .5s ease;
-}
-
-.list__add:hover{
-    opacity: 0.6;
-}
 
 @media screen and (min-width: 768px) and (max-width: 1023px){
     .list__contaner{
@@ -49,11 +29,5 @@
         gap: 34px;
         margin: 50px 0 50px 0;
     }
-
-    .list__add{
-        width: 240px;
-    }
-    
-    
 }
 

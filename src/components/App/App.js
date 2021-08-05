@@ -27,7 +27,9 @@ function App() {
                 </Route>
 
                 <Route path="/saved-movies">
+                  <SavedMovies />
                 </Route>
+                
                 <Route path="/profile">
                 </Route>
                 <Route path="/sign-in">

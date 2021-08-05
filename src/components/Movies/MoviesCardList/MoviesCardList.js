@@ -1,5 +1,6 @@
 import './MoviesCardList.css';
 import MoviesCard from "../MoviesCard/MoviesCard";
+import ButtonAdd from "../ButtonAdd/ButtonAdd";
 
 function MoviesCardList() {
   return (
@@ -17,7 +18,7 @@ function MoviesCardList() {
             <MoviesCard />
             <MoviesCard />
         </ul>
-        <button  className="list__add">Ещё</button>
+        <ButtonAdd />
     </div>
   )
 }
