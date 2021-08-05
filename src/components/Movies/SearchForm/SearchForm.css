@@ -39,5 +39,26 @@
     text-align: center;
     color: #FFFFFF;
     margin-left: 10px;
+    transition: all .5s ease;
+}
 
+.form-button:hover{
+    opacity: 0.6;
+}
+
+
+@media screen and (max-width: 767px){
+    .form{
+        padding: 0 4px 43px 4px;
+    }
+
+    .form-contaner{
+        margin-bottom: 44px;
+    }
+
+    .form-input{
+        height: 44px;
+        font-size: 12px;
+        padding-left: 16px; 
+    }
 }

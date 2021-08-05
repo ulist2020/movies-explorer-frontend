@@ -1,5 +1,16 @@
 .movies{
     background-color: #202020;
     padding: 80px 70px 80px 70px;
+}
 
+@media screen and (min-width: 768px) and (max-width: 1023px){
+    .movies{
+        padding: 80px 30px 80px 30px;
+    }
+}
+
+@media screen and (max-width: 767px){
+    .movies{
+        padding: 80px 10px 80px 10px;
+    }
 }

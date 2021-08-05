@@ -6,9 +6,10 @@ import MoviesCard from "./MoviesCard/MoviesCard";
 
 function Movies() {
   return (
-    <main className="movies">
+    <div className="movies">
         <SearchForm />
-    </main>
+        <MoviesCardList />
+    </div>
   )
 }
 export default Movies;
