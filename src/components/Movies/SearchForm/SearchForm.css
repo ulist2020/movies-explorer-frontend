@@ -4,7 +4,7 @@
     text-align: center;
 }
 
-.form-contaner{
+.form__contaner{
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -12,7 +12,7 @@
     margin-bottom: 31px;
 }
 
-.form-input{
+.form__input{
     height: 48px;
     background-color: #2F2F2F;
     border-radius: 4px;
@@ -26,7 +26,7 @@
     width: 100%;   
 }
 
-.form-button{
+.form__button{
     width: 70px;
     height: 44px;
     background-color: #4285F4;
@@ -42,7 +42,7 @@
     transition: all .5s ease;
 }
 
-.form-button:hover{
+.form__button:hover{
     opacity: 0.6;
 }
 
@@ -52,11 +52,11 @@
         padding: 0 4px 43px 4px;
     }
 
-    .form-contaner{
+    .form__contaner{
         margin-bottom: 44px;
     }
 
-    .form-input{
+    .form__input{
         height: 44px;
         font-size: 12px;
         padding-left: 16px; 

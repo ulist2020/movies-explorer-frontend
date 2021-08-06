@@ -7,6 +7,10 @@
     padding: 0 70px 0 70px;
 }
 
+.header__none{
+    display: none;
+}
+
 .header__logo{
     background-image: url(../../images/logo.png);
     background-size: contain;

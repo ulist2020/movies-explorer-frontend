@@ -12,10 +12,11 @@ import Register from '../Register/Register';
 import Footer from '../Footer/Footer';
 
 function App() {
+
   return (
           <div className="app">
             
-              <Header/>
+              <Header />
 
               <Switch>
                 <Route exact path="/">
@@ -29,16 +30,23 @@ function App() {
                 <Route path="/saved-movies">
                   <SavedMovies />
                 </Route>
-                
+
                 <Route path="/profile">
+                  
                 </Route>
+
                 <Route path="/sign-in">
                 </Route>
+
                 <Route path="/sign-up">
+                  <Register />
                 </Route>
+
               </Switch>
 
               <Footer />
+
+              
             </div>
           
   )
