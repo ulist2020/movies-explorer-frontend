@@ -12,7 +12,6 @@ function Profile() {
                     <input id="profile-email" className="profile__input" placeholder="E-mail" name="email" tape="email" required/>
                 <p className="profile__description">Пароль</p>
                     <input id="profile-password" className="profile__input" placeholder="Пароль" name="password" tape="text" minLength="2" maxLength="20" required/>
-                <ButtonRegister />
     </form>
   )
 }

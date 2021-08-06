@@ -32,10 +32,11 @@ function App() {
                 </Route>
 
                 <Route path="/profile">
-                  
+                  <Profile />
                 </Route>
 
                 <Route path="/sign-in">
+                  <Login />
                 </Route>
 
                 <Route path="/sign-up">

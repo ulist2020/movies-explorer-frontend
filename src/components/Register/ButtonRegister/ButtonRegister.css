@@ -5,6 +5,7 @@
     align-items: center;
 }
 
+
 .but__profile{
     background-color: #4285F4;
     border-radius: 3px;
@@ -17,6 +18,11 @@
     line-height: 17px;
     text-align: center;
     color: #FFFFFF;
+    transition: opacity linear 0.5s;
+}
+
+.but__profile:hover{
+    opacity: 0.6;
 }
 
 .but__register{
@@ -26,10 +32,68 @@
     line-height: 17px;
     color: #8B8B8B;
     margin-top: 16px;
+    transition: opacity linear 0.5s;
+}
+
+.but__register:hover{
+    opacity: 0.6;
 }
 
 .but__register-auth{
     text-decoration: none;
     color: #4285F4;
     margin-left: 6px;
+    transition: opacity linear 0.5s;
+}
+
+.but__register-auth:hover{
+    opacity: 0.6;
+}
+
+@media screen and (min-width: 768px) and (max-width: 1023px){
+    .but{
+        padding: 70px 0 232px 0;
+    }
+
+    .but_register{
+        opacity: 0;
+    }
+
+    .but_register:hover{
+        opacity: 1;
+    }
+
+    .but__profile_register{
+        background-color: #202020;
+        border: 1px solid #4285F4;
+        color: #4285F4;
+    }
+    
+    .but__register_register{
+        color: #4285F4;
+    }
+    
+    .but__register-auth_register{
+        color: #4285F4;
+    }
+}
+
+@media screen and (max-width: 767px){
+    .but{
+        padding: 157px 0 30px 0;
+    }
+
+    .but__profile{
+        font-size: 12px;
+        line-height: 15px;
+    }
+
+    .but__register{
+        font-size: 12px;
+        line-height: 15px;
+        margin-top: 14px;
+    }
+    
+    
+
 }
