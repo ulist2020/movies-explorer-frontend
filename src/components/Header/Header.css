@@ -1,12 +1,12 @@
-.header{
-    height: 74px;
+.header__conaner{
+      height: 74px;
     background-color: #073042;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 0 70px 0 70px;
+  
 }
-
 .header__none{
     display: none;
 }

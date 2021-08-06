@@ -6,18 +6,20 @@ import Navigation from "../Navigation/Navigation";
 function Header() {
     const location = useLocation();
   return (
-        <div className={`header ${(location.pathname === '/sign-up' || location.pathname === '/sign-in')  && 'header__none'}`}>
+        <header className={`header ${(location.pathname === '/sign-up' || location.pathname === '/sign-in')  && 'header__none'}`}>
             <Switch>
-                <Route exact path="/">      
-                    <div className="header__logo"/>
-                        <div className="header-contaner">
-                            <Link to="/sign-up" className="header__sign-up" >
-                                 Регистрация
-                            </Link>
-                            <Link to="/sign-in" className="header__sign-in" >
-                                 Войти
-                            </Link>
+                <Route exact path="/"> 
+                    <div className="header__conaner">     
+                        <div className="header__logo"/>
+                            <div className="header-contaner">
+                                <Link to="/sign-up" className="header__sign-up" >
+                                    Регистрация
+                                </Link>
+                                <Link to="/sign-in" className="header__sign-in" >
+                                    Войти
+                                </Link>
                         </div>
+                    </div>
                 </Route>
                 <Route path="/movies">
                     <Navigation/>
@@ -29,7 +31,7 @@ function Header() {
                     <Navigation/>
                 </Route>
             </Switch>
-        </div>
+        </header>
   );
 }
 
