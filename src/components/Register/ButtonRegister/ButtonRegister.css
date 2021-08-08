@@ -5,7 +5,6 @@
     align-items: center;
 }
 
-
 .but__profile{
     background-color: #4285F4;
     border-radius: 3px;
@@ -35,6 +34,13 @@
     transition: opacity linear 0.5s;
 }
 
+.but__login{
+    padding: 179px 0 70px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .but__register:hover{
     opacity: 0.6;
 }
@@ -55,32 +61,15 @@
         padding: 70px 0 232px 0;
     }
 
-    .but_register{
-        opacity: 0;
+    .but__login{
+        padding: 179px 0 232px 0;
     }
 
-    .but_register:hover{
-        opacity: 1;
-    }
-
-    .but__profile_register{
-        background-color: #202020;
-        border: 1px solid #4285F4;
-        color: #4285F4;
-    }
-    
-    .but__register_register{
-        color: #4285F4;
-    }
-    
-    .but__register-auth_register{
-        color: #4285F4;
-    }
 }
 
 @media screen and (max-width: 767px){
     .but{
-        padding: 157px 0 30px 0;
+        padding: 170px 0 30px 0;
     }
 
     .but__profile{
@@ -93,7 +82,8 @@
         line-height: 15px;
         margin-top: 14px;
     }
-    
-    
 
+    .but__login{
+        padding: 267px 0 30px 0;
+    }
 }

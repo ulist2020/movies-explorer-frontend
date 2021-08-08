@@ -3,10 +3,10 @@ import { Link } from "react-router-dom";
 
 function ButtonRegister(props) {
   return (
-    <div className="but but_register">
-        <button className="but__profile but__profile_register" tape="submit" aria-label="Зарегистрироваться">Зарегистрироваться</button>
-          <p className="but__register but__register_register">Уже зарегистрированны?
-              <Link to="/sign-in" className="but__register-auth but__register-auth_register">Войти</Link>
+    <div className={props.className}>
+        <button className="but__profile" tape="submit" aria-label={props.buttonText}>{props.buttonText}</button>
+          <p className="but__register">{props.text}
+              <Link to={props.link} className="but__register-auth">{props.buttonLink} </Link>
           </p>
     </div>
   )

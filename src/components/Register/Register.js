@@ -17,7 +17,13 @@ function Register() {
                 <p className="register__description">Пароль</p>
                     <input id="register-password" className="register__input register__input_error" name="password" type="password" minLength="2" maxLength="20" required/>
                     <span className="register__error register__error_visible">Что-то пошло не так...</span> 
-                <ButtonRegister />
+                <ButtonRegister
+                className="but"
+                buttonText="Зарегистрироваться"
+                text="Уже зарегистрированы?"
+                link="/sign-in"
+                buttonLink="Войти"
+                 />
     </form>
   )
 }
