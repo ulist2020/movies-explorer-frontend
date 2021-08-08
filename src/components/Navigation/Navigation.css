@@ -1,10 +1,14 @@
 .navigation{
     background-color: #202020;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 70px 0 70px;
 }
 
 .navigation__contaner{
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: center;
 }
 
@@ -72,7 +76,7 @@
 
     @media screen and (min-width: 768px) and (max-width: 1023px){
         .navigation{
-            padding: 0;
+            padding: 0 30px 0 30px;
         }
 
         .navigation__links{ 
@@ -90,7 +94,7 @@
 
     @media screen and (max-width: 767px){
         .navigation{
-            padding: 0;
+            padding: 0 14px 0 14px;
         }
         
         .navigation__links{ 

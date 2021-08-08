@@ -3,6 +3,10 @@
     padding: 79px 70px 20px 70px;
 }
 
+.footer_none{
+    display: none;
+}
+
 .footer__header{
     font-style: normal;
     font-weight: 400;

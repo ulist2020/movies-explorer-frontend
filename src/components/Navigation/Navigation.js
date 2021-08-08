@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 function Navigation() {
   return (
-    <div className="header__conaner navigation">
+    <div className="header__contaner navigation">
         <div className="navigation__contaner">
             <div className="header__logo"/>
                 <nav className="navigation__links"> 
