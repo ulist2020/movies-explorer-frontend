@@ -6,7 +6,7 @@ import './Footer.css';
 function Footer() {
   const location = useLocation();
     return (
-      <section className={`footer ${(location.pathname === '/sign-up' || location.pathname === '/sign-in')  && 'header__none'}`}>
+      <footer className={`footer ${(location.pathname === '/sign-up' || location.pathname === '/sign-in'|| location.pathname === '/profile')  && 'header__none'}`}>
           <p className="project__header footer__header">Учебный проект Яндекс.Практикум х BeatFilm.</p>
           <div className="footer__block">
               <p className="footer__year">© 2021</p>
@@ -16,7 +16,7 @@ function Footer() {
                 <a href="https://www.instagram.com/juliy_smirnovaa/" className="about-link footer__link">Instagram</a>
               </div>
           </div>
-      </section>
+      </footer>
     )
   }
   export default Footer;
