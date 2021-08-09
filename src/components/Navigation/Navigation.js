@@ -1,12 +1,13 @@
 import React from 'react';
 import './Navigation.css';
 import { Link } from "react-router-dom";
+import Logo from "../Logo/Logo";
 
 function Navigation(props) {
   return (
     <div className="header__contaner navigation">
         <div className="navigation__contaner">
-            <div className="header__logo"/>
+            <Link to="/"><Logo /></Link>
                 <nav className="navigation__links"> 
                     <Link to="/movies" className="header__sign-up navigation__movies" >
                         Фильмы

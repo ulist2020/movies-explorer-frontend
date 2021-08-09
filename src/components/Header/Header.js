@@ -2,6 +2,7 @@ import React from 'react';
 import './Header.css';
 import { Route, Link, Switch, useLocation } from "react-router-dom";
 import Navigation from "../Navigation/Navigation";
+import Logo from "../Logo/Logo";
 
 function Header(props) {
     const location = useLocation();
@@ -12,7 +13,7 @@ function Header(props) {
             <Switch>
                 <Route exact path="/"> 
                     <div className="header__contaner">     
-                        <div className="header__logo"/>
+                        <Link to="/"><Logo /></Link>
                             <div className="header__block">
                                 <Link to="/sign-up" className="header__sign-up" >
                                     Регистрация

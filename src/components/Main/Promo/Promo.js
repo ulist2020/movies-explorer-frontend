@@ -1,5 +1,9 @@
 import './Promo.css';
-import image from '../../../images/world.png'
+import image from '../../../images/world.png';
+
+function handleScroll(){
+  document.querySelector(".project").scrollIntoView();
+}
 
 function Promo() {
     return (
@@ -11,7 +15,7 @@ function Promo() {
             </div>
             <img className="promo__image" src={image}  alt="Земной шар"/>
           </div>
-          <button className="promo__button" aria-label="Кнопка узнать больше">Узнать больше</button>
+          <button onClick={handleScroll} className="promo__button" aria-label="Кнопка узнать больше">Узнать больше</button>
       </section>
     )
   }
