@@ -43,8 +43,10 @@
     border: none;
     font-weight: 500;
     font-size: 14px;
-    line-height: 16px;
     color: #FFFFFF;
+    text-align: center;
+    line-height: 2.2;
+    text-decoration: none;
     cursor: pointer;
     transition: opacity linear 0.5s;
 }

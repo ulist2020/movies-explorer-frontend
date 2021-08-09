@@ -2,7 +2,7 @@ import React from 'react';
 import './Navigation.css';
 import { Link } from "react-router-dom";
 
-function Navigation() {
+function Navigation(props) {
   return (
     <div className="header__contaner navigation">
         <div className="navigation__contaner">
@@ -16,8 +16,8 @@ function Navigation() {
                     </Link>
                 </nav>
         </div>
-        <button className="navigation__button">Аккаунт</button>
-        <div className="navigation__menu"/>
+        <Link to="/profile" className="navigation__button">Аккаунт</Link>
+        <div className="navigation__menu" onClick={props.handleClick}/>
     </div>
   );
 }

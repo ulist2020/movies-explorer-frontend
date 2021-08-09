@@ -3,7 +3,7 @@ import './Header.css';
 import { Route, Link, Switch, useLocation } from "react-router-dom";
 import Navigation from "../Navigation/Navigation";
 
-function Header() {
+function Header(props) {
     const location = useLocation();
   return (
         <header className={`header ${(location.pathname === "/sign-up" 
@@ -24,7 +24,10 @@ function Header() {
                     </div>
                 </Route>
                 <Route path="/movies">
-                    <Navigation/>
+                    <Navigation
+                    handleClick={props.handleClick}
+                    
+                    />
                 </Route>
                 <Route path="/saved-movies">
                     <Navigation/>
