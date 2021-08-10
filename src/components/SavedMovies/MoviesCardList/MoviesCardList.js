@@ -1,13 +1,13 @@
 import './MoviesCardList.css';
-import MoviesCard from "../../Movies/MoviesCard/MoviesCard";
+import MoviesCardSave from "../MoviesCardSave/MoviesCardSave";
 
 function MoviesCardList() {
   return (
       <div className="list">
         <ul className="list__contaner">
-            <MoviesCard />
-            <MoviesCard />
-            <MoviesCard />
+            <MoviesCardSave />
+            <MoviesCardSave />
+            <MoviesCardSave />
         </ul>
     </div>
   )

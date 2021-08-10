@@ -32,6 +32,11 @@
     opacity: 0.6;
 }
 
+.card__like_activ{
+    background-image: url(../../../images/like_activ.png); 
+}
+
+
 .card__time{
     margin: 29px 0 0 0;
     border-top: 1px solid #424242;

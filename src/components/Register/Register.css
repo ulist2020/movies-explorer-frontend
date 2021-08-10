@@ -3,7 +3,9 @@
     display: flex;
     flex-direction: column;
     margin: auto;
-    padding: 70px 442px 442px;
+    padding: 70px 442px 442px;    
+    width: 396px;   
+
 }
 
 .register__header{
@@ -34,7 +36,6 @@
     line-height: 16px;
     color: #FFFFFF;
     padding-left: 15px; 
-    width: calc(100% - 17px);   
 }
 
 .register__error{
@@ -64,6 +65,7 @@
 @media screen and (max-width: 767px){
     .register{
         padding: 56px 30px;
+        width: 260px;
     }
 
     .register__contaner{
