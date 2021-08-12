@@ -3,12 +3,12 @@ import './MoviesCard.css';
 function MoviesCard(props) {
   return (
     <li className="card">
-        <div className="card__video" style={{ backgroundImage: `url(https://www.kinobox.cz/data/clanky/640x400x1/recenze-spojenci.jpg)` }}  alt="Название фильма" />
+        <div className="card__video" style={{ backgroundImage: `url(https://api.nomoreparties.co${props.image})` }} />
             <div className="card__contaner">
-                <p className="card__name">Название фильма</p>
+                <p className="card__name" >{props.nameRU}</p>
                 <button className="card__like" onClick={props.onCardLike}  type="button" aria-label="Поставить лайк" />
             </div>
-            <p className="card__time">1ч42м</p>
+            <p className="card__time">{props.duration}</p>
     </li>
   )
 }

@@ -2,11 +2,12 @@ import './Movies.css';
 import SearchForm from "./SearchForm/SearchForm";
 import MoviesCardList from "./MoviesCardList/MoviesCardList";
 
-function Movies() {
+function Movies(props) {
   return (
     <div className="movies">
         <SearchForm />
-        <MoviesCardList />
+        <MoviesCardList 
+        movies={props.movies}/>
     </div>
   )
 }

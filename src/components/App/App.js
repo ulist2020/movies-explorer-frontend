@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Route, Switch } from "react-router-dom";
 import '../../index.css';
 import './App.css';
@@ -12,9 +12,11 @@ import Register from '../Register/Register';
 import PageNotFound from '../PageNotFound/PageNotFound';
 import Footer from '../Footer/Footer';
 import PopupNav from '../PopupNav/PopupNav';
+import moviesApi from '../../utils/MoviesApi';
 
 function App() {
   const [isNavPopup, setisNavPopup] = useState(false);
+  const [movies, setMovies] = useState([]);
 
   function handleNavPopupClick() {
     setisNavPopup(true);
@@ -23,6 +25,16 @@ function App() {
   function closePopup() {
     setisNavPopup(false);
   }
+
+  useEffect(() => {
+    moviesApi.getInitialMovies()
+    .then((results) => {
+      console.log(results)
+      console.log(results.nameRU)
+      setMovies(results)
+    })
+    .catch((err) => console.log(`Ошибка: ${err}`));
+  },[])
 
   return (
           <div className="app">
@@ -33,11 +45,13 @@ function App() {
 
                 <Switch>
                   <Route exact path="/">
-                    <Main />
+                    <Main 
+                    />
                   </Route>
 
                   <Route path="/movies">
-                    <Movies />
+                    <Movies 
+                    movies={movies} />
                   </Route>
 
                   <Route path="/saved-movies">
