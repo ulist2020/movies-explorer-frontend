@@ -7,9 +7,11 @@ function PopupNav(props) {
             <div className="popup__container">
                 <button onClick={props.onClose} className="popup__close-button" type="reset" aria-label="Закрыть окно редактирования" />
                     <div className="popup__block">
+                        <div className="popup__links">
                         <Link onClick={props.onClose} className="popup__menu" to="/">Главная</Link>
                         <Link onClick={props.onClose} className="popup__menu" to="/movies">Фильмы</Link>
                         <Link onClick={props.onClose} className="popup__menu" to="/saved-movies">Сохранённые фильмы</Link>
+                        </div>
                         <Link onClick={props.onClose} className="navigation__button  popup__button" to="/profile">Аккаунт</Link>
                     </div>
             </div>

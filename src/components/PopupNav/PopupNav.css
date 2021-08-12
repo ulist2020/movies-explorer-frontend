@@ -50,7 +50,14 @@
     display: flex;
     flex-direction: column;
     align-items: center;
- 
+    justify-content: space-between;
+    height: 75vh;
+}
+
+.popup__links{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .popup__menu{
@@ -62,7 +69,6 @@
     color: #FFFFFF;
     border-bottom: 2px solid transparent;
     margin-bottom: 22px;
-
 }
 
 .popup__menu:hover{
@@ -72,7 +78,6 @@
 .popup__button{
     display: flex;
     justify-content: center;
-    margin-top: 480px;
 }
 
 @media screen and (max-width: 767px){
