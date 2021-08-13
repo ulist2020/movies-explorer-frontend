@@ -1,0 +1,166 @@
+.project{
+    background-color: #202020;
+    padding: 110px 70px 110px 70px;
+}
+
+.project__header{
+    margin: 0;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 22px;
+    line-height: 27px;
+    height: 50px;
+    border-bottom: 1px solid #DADADA;
+}
+
+.project__description{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 40px;
+    margin-top: 70px;
+}
+
+.project__stages-title{
+    margin: 0;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 24px;
+}
+
+.project__stages-subtitle{
+    margin: 26px 0 0 0;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+}
+
+.project__time{
+    display: flex;
+    margin-top: 110px;
+}
+.project__time-front{
+    width: 20%;
+    text-align: center;
+}
+
+.project__time-first{
+    margin: 0 0 14px 0;
+    height: 36px;
+    background-color: #3DDC84;
+    text-align: center;
+    font-weight: 400;
+    font-size: 14px;
+    color: #000000;
+    line-height: 36px;
+}
+
+.project__time-about{
+    margin: 0;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 17px;
+    color: #8B8B8B;
+    text-align: center;
+    text-decoration: none;
+    transition: opacity linear 0.5s;
+}
+
+.project__time-about:hover{
+    opacity: 0.6;
+}
+
+.project__time-back{
+    width: 80%;
+    text-align: center;
+}
+
+.project__time-second{
+    margin: 0 0 14px 0;
+    height: 36px;
+    background-color: #303030;
+    text-align: center;
+    font-weight: 400;
+    font-size: 14px;
+    color: #FFFFFF;
+    line-height: 36px;
+}
+
+@media screen and (min-width: 768px) and (max-width: 1023px){
+    .project{
+        padding: 90px 50px 90px 50px;
+    }
+
+    .project__description{
+        column-gap: 30px;
+    }
+
+    .project__stages-subtitle{
+        margin: 22px 0 0 0;
+        font-size: 12px;
+        line-height: 18px;
+    }
+    .project__time{
+        margin-top: 93px;
+    }
+}
+
+@media screen and (max-width: 767px){
+    .project{
+        padding: 70px 18px 70px 18px;
+    }
+    .project__header{
+        font-size: 18px;
+        line-height: 22px;
+    }
+
+    .project__description{
+        grid-template-columns: 100%;
+        margin-top: 4px;
+    }
+
+    .project__stages-title{
+        font-size: 18px;
+        line-height: 22px;
+        margin-top: 56px;
+    }
+
+    .project__stages-subtitle{
+        margin: 16px 0 0 0;
+        font-size: 11px;
+        line-height: 16px;
+    }
+
+    .project__time{
+        margin-top: 60px;
+    }
+    
+    .project__time-front{
+        width: 35%;
+    }
+
+    .project__time-back{
+        width: 65%;
+    }
+
+    .project__time-first{
+        margin: 0 0 10px 0;
+        font-size: 11px;
+        line-height: 36px;
+    }
+
+    .project__time-about{
+        font-size: 11px;
+        line-height: 13px;
+        
+    }
+
+    .project__time-second{
+        margin: 0 0 10px 0;
+        font-size: 11px;
+        line-height: 36px;
+    }
+    
+}
