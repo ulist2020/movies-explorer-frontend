@@ -5,11 +5,11 @@ function handleLikeClick() {
   document.querySelector(".card__like").classList.add("card__like_activ");
 } 
 
-function MoviesCardList(props) {
+function MoviesCardList({movies}) {
   return (
       <div className="list">
         <ul className="list__contaner">
-        {props.movies.map((card)=>
+        {movies.map((card)=>
             (<MoviesCard
               key={card.id}
               image={card.image.url} 

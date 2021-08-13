@@ -17,6 +17,7 @@ import moviesApi from '../../utils/MoviesApi';
 function App() {
   const [isNavPopup, setisNavPopup] = useState(false);
   const [movies, setMovies] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   function handleNavPopupClick() {
     setisNavPopup(true);
@@ -26,15 +27,31 @@ function App() {
     setisNavPopup(false);
   }
 
+  
+  const moviesFind = (results, request) => {
+    return results.filter((movie) =>{
+      console.log(movie.director)
+      return movie.nameRU.toLowerCase().includes(request.toLowerCase());
+    });
+  };
+
   useEffect(() => {
     moviesApi.getInitialMovies()
     .then((results) => {
-      console.log(results)
-      console.log(results.nameRU)
       setMovies(results)
     })
     .catch((err) => console.log(`Ошибка: ${err}`));
   },[])
+
+  function handleUpdateForm(request){
+    setLoading(true);
+     moviesApi.getInitialMovies()
+    .then((results) => {
+      setMovies(moviesFind(results, request))
+      setLoading(false);
+    })
+    .catch((err) => console.log(`Ошибка: ${err}`));
+  }
 
   return (
           <div className="app">
@@ -51,7 +68,11 @@ function App() {
 
                   <Route path="/movies">
                     <Movies 
-                    movies={movies} />
+
+                    loading={loading}
+                    onUpdateForm={handleUpdateForm}
+                    movies={movies}
+                    />
                   </Route>
 
                   <Route path="/saved-movies">

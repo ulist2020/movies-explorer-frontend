@@ -1,14 +1,14 @@
 import './MoviesCard.css';
 
-function MoviesCard(props) {
+function MoviesCard(movies) {
   return (
     <li className="card">
-        <div className="card__video" style={{ backgroundImage: `url(https://api.nomoreparties.co${props.image})` }} />
+        <div className="card__video" style={{ backgroundImage: `url(https://api.nomoreparties.co${movies.image})` }} />
             <div className="card__contaner">
-                <p className="card__name" >{props.nameRU}</p>
-                <button className="card__like" onClick={props.onCardLike}  type="button" aria-label="Поставить лайк" />
+                <p className="card__name" >{movies.nameRU}</p>
+                <button className="card__like" onClick={movies.onCardLike}  type="button" aria-label="Поставить лайк" />
             </div>
-            <p className="card__time">{props.duration}</p>
+            <p className="card__time">{movies.duration}</p>
     </li>
   )
 }

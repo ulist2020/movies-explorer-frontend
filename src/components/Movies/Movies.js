@@ -1,13 +1,17 @@
 import './Movies.css';
 import SearchForm from "./SearchForm/SearchForm";
 import MoviesCardList from "./MoviesCardList/MoviesCardList";
+import Preloader from './Preloader/Preloader';
 
-function Movies(props) {
+function Movies({movies, onUpdateForm, loading}) {
   return (
     <div className="movies">
-        <SearchForm />
+        <SearchForm 
+        onUpdateForm={onUpdateForm}
+          />
+        {loading && (<Preloader />)}
         <MoviesCardList 
-        movies={props.movies}/>
+        movies={movies}/>
     </div>
   )
 }
