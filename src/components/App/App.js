@@ -18,6 +18,7 @@ function App() {
   const [isNavPopup, setisNavPopup] = useState(false);
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [errorServer, setErrorServer] = useState(false);
 
   function handleNavPopupClick() {
     setisNavPopup(true);
@@ -27,7 +28,7 @@ function App() {
     setisNavPopup(false);
   }
 
-  
+  //Фильтр фильма по названию
   const moviesFind = (results, request) => {
     return results.filter((movie) =>{
       console.log(movie.director)
@@ -35,22 +36,31 @@ function App() {
     });
   };
 
+  //Отрисовка всех карточек
   useEffect(() => {
     moviesApi.getInitialMovies()
     .then((results) => {
       setMovies(results)
     })
-    .catch((err) => console.log(`Ошибка: ${err}`));
+    .catch(() => {
+      setErrorServer(true);
+    });
   },[])
 
+  //Поиск фильма по названию
   function handleUpdateForm(request){
     setLoading(true);
      moviesApi.getInitialMovies()
     .then((results) => {
       setMovies(moviesFind(results, request))
-      setLoading(false);
+      
     })
-    .catch((err) => console.log(`Ошибка: ${err}`));
+    .catch(() => {
+      setErrorServer(true);
+    })
+    .finally(() => {
+      setLoading(false);
+    });
   }
 
   return (
@@ -70,6 +80,7 @@ function App() {
                     <Movies 
 
                     loading={loading}
+                    errorServer={errorServer}
                     onUpdateForm={handleUpdateForm}
                     movies={movies}
                     />
