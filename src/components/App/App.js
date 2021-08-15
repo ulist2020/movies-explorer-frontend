@@ -31,10 +31,17 @@ function App() {
   //Фильтр фильма по названию
   const moviesFind = (results, request) => {
     return results.filter((movie) =>{
-      console.log(movie.director)
       return movie.nameRU.toLowerCase().includes(request.toLowerCase());
     });
   };
+
+  //Фильтр короткого фильма
+  const moviesShort = (results) => {
+    return results.filter((movie) =>{
+    return movie.duration <= 40;
+  });
+}
+
 
   //Отрисовка всех карточек
   useEffect(() => {
@@ -53,6 +60,22 @@ function App() {
      moviesApi.getInitialMovies()
     .then((results) => {
       setMovies(moviesFind(results, request))
+      
+    })
+    .catch(() => {
+      setErrorServer(true);
+    })
+    .finally(() => {
+      setLoading(false);
+    });
+  }
+
+  //Поиск короткого фильма
+  function handleFilterCheckbox(request){
+    setLoading(true);
+     moviesApi.getInitialMovies()
+    .then((results) => {
+      setMovies(moviesShort(results))
       
     })
     .catch(() => {
@@ -82,6 +105,7 @@ function App() {
                     loading={loading}
                     errorServer={errorServer}
                     onUpdateForm={handleUpdateForm}
+                    onClickCheckbox={handleFilterCheckbox}
                     movies={movies}
                     />
                   </Route>

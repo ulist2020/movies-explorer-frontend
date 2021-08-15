@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './SearchForm.css';
 import FilterCheckbox from "../FilterCheckbox/FilterCheckbox";
 
-function SearchForm({onUpdateForm}) {
+function SearchForm({onUpdateForm, onClickCheckbox}) {
   const [movie, setMovie] = useState('');
 
   function handleChangeMovie(e) {
@@ -28,7 +28,8 @@ function SearchForm({onUpdateForm}) {
             maxLength="50" required/>
             <button className="form__button" tape="submit" aria-label="Найти">Найти</button>
         </form>
-        <FilterCheckbox />
+        <FilterCheckbox 
+        onClickCheckbox={onClickCheckbox} />
     </div>
   )
 }
