@@ -19,14 +19,10 @@ function App() {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(false);
   const [errorServer, setErrorServer] = useState(false);
+  const [countCards, setCountCards] = useState(0);
+  const [addCards, setaddCards] = useState(0);
+  const [moreCards, setMoreCards] = useState(0);
 
-  function handleNavPopupClick() {
-    setisNavPopup(true);
-  }
-
-  function closePopup() {
-    setisNavPopup(false);
-  }
 
   //Фильтр фильма по названию
   const moviesFind = (results, request) => {
@@ -40,19 +36,21 @@ function App() {
     return results.filter((movie) =>{
     return movie.duration <= 40;
   });
-}
+};
 
+ //Нажатие на кнопку "ещё"
+  const handleClickAddCards = () => {
+    setMoreCards(moreCards + addCards);
+  };
+  
 
-  //Отрисовка всех карточек
-  useEffect(() => {
-    moviesApi.getInitialMovies()
-    .then((results) => {
-      setMovies(results)
-    })
-    .catch(() => {
-      setErrorServer(true);
-    });
-  },[])
+  function handleNavPopupClick() {
+    setisNavPopup(true);
+  }
+
+  function closePopup() {
+    setisNavPopup(false);
+  }
 
   //Поиск фильма по названию
   function handleUpdateForm(request){
@@ -86,6 +84,50 @@ function App() {
     });
   }
 
+//Кличество карточек в зависимости от разрешения экрана
+function countCard() {
+  if (window.innerWidth >= 1024) {
+    setCountCards(12);
+    setaddCards(4);
+  }
+  if (window.innerWidth <= 1023 && window.innerWidth >= 768) {
+    setCountCards(8);
+    setaddCards(2);
+  }
+  if (window.innerWidth <= 480 && window.innerWidth >= 320) {
+    setCountCards(5);
+    setaddCards(2);
+  }
+}
+
+function timeoutResize() {
+  setTimeout(countCard, 300);
+};
+
+  //Отрисовка всех карточек
+  useEffect(() => {
+    moviesApi.getInitialMovies()
+    .then((results) => {
+      setMovies(results)
+    })
+    .catch(() => {
+      setErrorServer(true);
+    });
+  },[]);
+
+//Отрисовка карточек в зависимости от разрешения экрана
+useEffect(() => {
+  countCard();
+}, []);
+
+//Изменение ширины экрана
+useEffect(() => {
+  window.addEventListener("resize", timeoutResize);
+  return () => window.removeEventListener('resize', timeoutResize);
+},);
+
+
+
   return (
           <div className="app">
             
@@ -107,6 +149,9 @@ function App() {
                     onUpdateForm={handleUpdateForm}
                     onClickCheckbox={handleFilterCheckbox}
                     movies={movies}
+                    onButtonAdd={handleClickAddCards}
+                    countCards={countCards + moreCards}
+                  
                     />
                   </Route>
 

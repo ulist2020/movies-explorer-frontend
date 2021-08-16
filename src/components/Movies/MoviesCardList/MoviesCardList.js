@@ -1,15 +1,17 @@
 import './MoviesCardList.css';
 import MoviesCard from "../MoviesCard/MoviesCard";
-import ButtonAdd from "../ButtonAdd/ButtonAdd";
+
 function handleLikeClick() {
   document.querySelector(".card__like").classList.add("card__like_activ");
-} 
+}
 
-function MoviesCardList({movies}) {
+
+function MoviesCardList({movies, countCards}) {
+
   return (
       <div className="list">
         <ul className="list__contaner">
-        {movies.map((card)=>
+        {movies.slice(0, countCards).map((card)=>
             (<MoviesCard
               key={card.id}
               image={card.image.url} 
@@ -20,7 +22,6 @@ function MoviesCardList({movies}) {
           />)
         )}
         </ul>
-        <ButtonAdd />
     </div>
   )
 }
