@@ -16,6 +16,7 @@ import moviesApi from '../../utils/MoviesApi';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import mainApi from '../../utils/MainApi';
 import * as auth from "../../utils/auth";
+import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
 
 function App() {
   const history = useHistory();
@@ -29,6 +30,7 @@ function App() {
   const [isAuthSuccess, setIsAuthSuccess] = useState(false);
   const [userEmail, setUserEmail] = useState('');
   const [loggedIn, setloggedIn] = useState(false);
+  const [currentUser, setCurrentUser] = useState({});
 
   //Фильтр фильма по названию
   const moviesFind = (results, request) => {
@@ -181,14 +183,39 @@ useEffect(() => {
   }
 }, [history]);
 
+useEffect(() => {
+  mainApi.getUser()
+  .then((results) => {
+    setCurrentUser(
+      {
+        _id: results.data._id,
+        name: results.data.name,
+        email: results.data.email,
+    })
+  })
+  .catch((err) => console.log(`Ошибка: ${err}`));
+},[])
+
+function handleUpdateUser(currentUser) {
+  mainApi.editUser(currentUser)
+    .then((results) =>{
+      console.log(results)
+      setCurrentUser(results);
+      alert("Данные ползователя успешно изменены")
+    })
+    .catch((err) => console.log(`Ошибка: ${err}`));
+
+}
 
 
   return (
+    <CurrentUserContext.Provider value={currentUser}>
           <div className="app">
             
               <Header 
                 handleClick={handleNavPopupClick}
-                email={userEmail.email}
+                email={userEmail.email}                      
+
               />
 
                 <Switch>
@@ -197,29 +224,35 @@ useEffect(() => {
                     />
                   </Route>
 
-                  <Route path="/movies">
-                    <Movies 
-                    loggedIn={loggedIn}
-
-                    loading={loading}
-                    errorServer={errorServer}
-                    onUpdateForm={handleUpdateForm}
-                    onClickCheckbox={handleFilterCheckbox}
-                    movies={movies}
-                    onButtonAdd={handleClickAddCards}
-                    countCards={countCards + moreCards}
-                  
+                  <ProtectedRoute
+                      exact
+                      path="/movies"
+                      loggedIn={loggedIn}
+                      component={Movies} 
+                      loading={loading}
+                      errorServer={errorServer}
+                      onUpdateForm={handleUpdateForm}
+                      onClickCheckbox={handleFilterCheckbox}
+                      movies={movies}
+                      onButtonAdd={handleClickAddCards}
+                      countCards={countCards + moreCards}
                     />
-                  </Route>
+                  
+                  <ProtectedRoute 
+                      exact
+                      path="/saved-movies"
+                      loggedIn={loggedIn}
+                      component={SavedMovies}
+                    />
 
-                  <Route path="/saved-movies">
-                    <SavedMovies />
-                  </Route>
-
-                  <Route path="/profile">
-                    <Profile />
-                  </Route>
-
+                  <ProtectedRoute 
+                      exact
+                      path="/profile"
+                      loggedIn={loggedIn}
+                      component={Profile}
+                      onUpdateUser={handleUpdateUser}
+                    />
+                  
                   <Route path="/sign-in">
                     <Login 
                     onLogin={handleLogin}
@@ -246,7 +279,7 @@ useEffect(() => {
                 onClose={closePopup}  />
               
             </div>
-          
+            </CurrentUserContext.Provider>     
   )
 }
 

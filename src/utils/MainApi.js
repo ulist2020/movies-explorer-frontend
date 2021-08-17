@@ -18,7 +18,7 @@ class Api {
     }    
     
     //Редактирование профиля
-    editUser({ name, about }){
+    editUser({ name, email }){
         return fetch(`${this._address}/users/me`, {
             method: 'PATCH',
             headers: {
@@ -28,7 +28,7 @@ class Api {
             },
             body: JSON.stringify({
                 name,
-                about
+                email
             })
     })
     .then(this._checkResponse)
