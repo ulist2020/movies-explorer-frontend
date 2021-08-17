@@ -17,6 +17,7 @@ function MoviesCardList({movies, countCards}) {
               image={card.image.url} 
               nameRU={card.nameRU} 
               duration={card.duration}
+              trailer={() => {window.open(card.trailerLink)}}
               card={card}
               onCardLike={handleLikeClick}
           />)

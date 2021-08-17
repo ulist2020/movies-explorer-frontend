@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, useHistory } from "react-router-dom";
 import '../../index.css';
 import './App.css';
 import Header from '../Header/Header';
@@ -13,8 +13,12 @@ import PageNotFound from '../PageNotFound/PageNotFound';
 import Footer from '../Footer/Footer';
 import PopupNav from '../PopupNav/PopupNav';
 import moviesApi from '../../utils/MoviesApi';
+import { CurrentUserContext } from '../../contexts/CurrentUserContext';
+import mainApi from '../../utils/MainApi';
+import * as auth from "../../utils/auth";
 
 function App() {
+  const history = useHistory();
   const [isNavPopup, setisNavPopup] = useState(false);
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -22,7 +26,9 @@ function App() {
   const [countCards, setCountCards] = useState(0);
   const [addCards, setaddCards] = useState(0);
   const [moreCards, setMoreCards] = useState(0);
-
+  const [isAuthSuccess, setIsAuthSuccess] = useState(false);
+  const [userEmail, setUserEmail] = useState('');
+  const [loggedIn, setloggedIn] = useState(false);
 
   //Фильтр фильма по названию
   const moviesFind = (results, request) => {
@@ -42,7 +48,6 @@ function App() {
   const handleClickAddCards = () => {
     setMoreCards(moreCards + addCards);
   };
-  
 
   function handleNavPopupClick() {
     setisNavPopup(true);
@@ -69,7 +74,7 @@ function App() {
   }
 
   //Поиск короткого фильма
-  function handleFilterCheckbox(request){
+  function handleFilterCheckbox(){
     setLoading(true);
      moviesApi.getInitialMovies()
     .then((results) => {
@@ -127,12 +132,63 @@ useEffect(() => {
 },);
 
 
+function handleRegister(name, email, password) {
+  auth.register(name, email, password)
+     .then((result) => {
+      if (result) {
+        setIsAuthSuccess(true);
+        history.push("/sign-in");
+      }
+    })
+    .catch((err) => {
+      console.log(`Ошибка: ${err}`);
+      setIsAuthSuccess(false);
+    });
+};
+
+function handleLogin(email, password) {
+  auth.authorize(email, password)
+     .then((result) => {
+      if (result.token) {
+        localStorage.setItem("jwt", result.token);
+        setUserEmail({
+          email: email,
+        });
+        setloggedIn(true);
+        history.push("/movies");
+      }
+    })
+    .catch((err) => {
+      console.log(`Ошибка: ${err}`);
+      setIsAuthSuccess(false);
+    });
+};
+
+useEffect(() => {
+  const jwt = localStorage.getItem("jwt");
+  if (jwt) {
+    auth.getContent(jwt)
+      .then((result) => {
+         setUserEmail({
+             email: result.data.email
+         })
+          setloggedIn(true);
+          history.push("/movies");
+      })
+      .catch((err) => {
+        console.log(`Ошибка: ${err}`);
+      });
+  }
+}, [history]);
+
+
 
   return (
           <div className="app">
             
               <Header 
                 handleClick={handleNavPopupClick}
+                email={userEmail.email}
               />
 
                 <Switch>
@@ -143,6 +199,7 @@ useEffect(() => {
 
                   <Route path="/movies">
                     <Movies 
+                    loggedIn={loggedIn}
 
                     loading={loading}
                     errorServer={errorServer}
@@ -164,11 +221,16 @@ useEffect(() => {
                   </Route>
 
                   <Route path="/sign-in">
-                    <Login />
+                    <Login 
+                    onLogin={handleLogin}
+                    />
                   </Route>
 
                   <Route path="/sign-up">
-                    <Register />
+                    <Register 
+                    onRegister={handleRegister}
+                    isSuccess={isAuthSuccess}
+                    />
                   </Route>
 
                   <Route path="*">
