@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import './Profile.css';
 
-function Profile({onUpdateUser}) {
+function Profile({onUpdateUser, onLogout}) {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
 
@@ -63,7 +63,7 @@ function Profile({onUpdateUser}) {
               </div>
           </div>
           <button className="profile__redaction" tape="submit" aria-label="Редактировать">Редактировать</button>
-          <button className="profile__out" tape="" aria-label="Выйти из аккаунта">Выйти из аккаунта</button>
+          <button className="profile__out" onClick={onLogout} aria-label="Выйти из аккаунта">Выйти из аккаунта</button>
     </form>
   )
 }

@@ -17,6 +17,7 @@ import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import mainApi from '../../utils/MainApi';
 import * as auth from "../../utils/auth";
 import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
+import InfoTooltip from "../InfoTooltip/InfoTooltip";
 
 function App() {
   const history = useHistory();
@@ -31,6 +32,7 @@ function App() {
   const [userEmail, setUserEmail] = useState('');
   const [loggedIn, setloggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
+  const [isInfoTooltipOpen, setisInfoTooltipOpen] = useState(false);
 
   //Фильтр фильма по названию
   const moviesFind = (results, request) => {
@@ -55,9 +57,15 @@ function App() {
     setisNavPopup(true);
   }
 
+  function handleInfoTooltip() {
+    setisInfoTooltipOpen(true);
+  }
+
   function closePopup() {
     setisNavPopup(false);
+    setisInfoTooltipOpen(false);
   }
+
 
   //Поиск фильма по названию
   function handleUpdateForm(request){
@@ -133,21 +141,28 @@ useEffect(() => {
   return () => window.removeEventListener('resize', timeoutResize);
 },);
 
+function handleAuthSuccess(item) {
+  setIsAuthSuccess(item);
+}
 
+//Регистрация
 function handleRegister(name, email, password) {
   auth.register(name, email, password)
      .then((result) => {
       if (result) {
-        setIsAuthSuccess(true);
+        handleAuthSuccess(true);
+        handleInfoTooltip();
         history.push("/sign-in");
       }
     })
     .catch((err) => {
       console.log(`Ошибка: ${err}`);
-      setIsAuthSuccess(false);
+      handleAuthSuccess(false);
+      handleInfoTooltip();
     });
 };
 
+//Авторизация
 function handleLogin(email, password) {
   auth.authorize(email, password)
      .then((result) => {
@@ -163,6 +178,7 @@ function handleLogin(email, password) {
     .catch((err) => {
       console.log(`Ошибка: ${err}`);
       setIsAuthSuccess(false);
+      handleInfoTooltip();
     });
 };
 
@@ -196,16 +212,25 @@ useEffect(() => {
   .catch((err) => console.log(`Ошибка: ${err}`));
 },[])
 
+//Редактирование пользователя
 function handleUpdateUser(currentUser) {
   mainApi.editUser(currentUser)
     .then((results) =>{
       console.log(results)
       setCurrentUser(results);
-      alert("Данные ползователя успешно изменены")
+      handleAuthSuccess(true);
+      handleInfoTooltip();
     })
     .catch((err) => console.log(`Ошибка: ${err}`));
 
 }
+
+function handleLogOut () {
+  localStorage.removeItem("jwt");
+  setloggedIn(false);
+  setUserEmail(' ');
+  history.push("/");
+};
 
 
   return (
@@ -251,6 +276,7 @@ function handleUpdateUser(currentUser) {
                       loggedIn={loggedIn}
                       component={Profile}
                       onUpdateUser={handleUpdateUser}
+                      onLogout={handleLogOut}
                     />
                   
                   <Route path="/sign-in">
@@ -262,7 +288,6 @@ function handleUpdateUser(currentUser) {
                   <Route path="/sign-up">
                     <Register 
                     onRegister={handleRegister}
-                    isSuccess={isAuthSuccess}
                     />
                   </Route>
 
@@ -275,8 +300,14 @@ function handleUpdateUser(currentUser) {
               <Footer />
 
                 <PopupNav
-                isOpen={isNavPopup}
-                onClose={closePopup}  />
+                  isOpen={isNavPopup}
+                  onClose={closePopup}  
+                />
+                <InfoTooltip
+                isOpen={isInfoTooltipOpen}
+                onClose={closePopup}
+                isSuccess={isAuthSuccess}
+              />
               
             </div>
             </CurrentUserContext.Provider>     
