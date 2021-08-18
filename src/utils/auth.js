@@ -1,5 +1,5 @@
-export const BASE_URL = 'https://api.julia.smirnova.nomoredomains.club';
-//export const BASE_URL = 'http://localhost:5000';
+//export const BASE_URL = 'https://api.julia.smirnova.nomoredomains.club';
+export const BASE_URL = 'http://localhost:3000';
 
 const checkResponse =(res) => {
   if (res.ok) {

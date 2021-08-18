@@ -35,10 +35,6 @@ class Api {
 
     }
 
-
-
-
-
     //Загрузка карточек с сервера
     getInitialCards() {
         return fetch(`${this._address}/movies`, {
@@ -51,10 +47,19 @@ class Api {
         .then(this._checkResponse)
     }
 
-
-
-    //Добавление новой карточки
-    addCard({ name, link }){
+    //Добавление сохраненного фильма
+    addSaveMovies({ country,
+        director,
+        duration,
+        year,
+        description,
+        image,
+        trailer,
+        nameRU,
+        nameEN,
+        thumbnail,
+        movieId,
+     }){
         return fetch(`${this._address}/movies`, {
             method: 'POST',
             headers: {
@@ -62,8 +67,17 @@ class Api {
                 'Content-Type': this._format
             },
             body: JSON.stringify({
-                name,
-                link
+                country: country,
+                director: director,
+                duration: duration,
+                year: year,
+                description: description,
+                image: image,
+                trailer: trailer,
+                nameRU: nameRU,
+                nameEN: nameEN,
+                thumbnail: thumbnail,
+                movieId: movieId,
             })
     })
     .then(this._checkResponse)
@@ -82,7 +96,6 @@ class Api {
         
     }
 
-
     _checkResponse(res) {
         if (res.ok) {
             return res.json();
@@ -92,8 +105,8 @@ class Api {
 }
 
 const mainApi = new Api({
-    address: 'https://api.julia.smirnova.nomoredomains.club',
-    //address: 'http://localhost:5000',
+    //address: 'https://api.julia.smirnova.nomoredomains.club',
+    address: 'http://localhost:3000',
     token: `Bearer ${localStorage.getItem('jwt')}`,
     format: 'application/json'
   }); 

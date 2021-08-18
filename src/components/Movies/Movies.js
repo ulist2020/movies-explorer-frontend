@@ -4,7 +4,7 @@ import MoviesCardList from "./MoviesCardList/MoviesCardList";
 import Preloader from './Preloader/Preloader';
 import ButtonAdd from "../Movies/ButtonAdd/ButtonAdd";
 
-function Movies({movies, onUpdateForm, loading, errorServer, onClickCheckbox, countCards, onButtonAdd}) {
+function Movies({movies, onUpdateForm, loading, errorServer, onClickCheckbox, countCards, onButtonAdd, onSavedMovies}) {
 
   return (
     <div className="movies">
@@ -19,7 +19,9 @@ function Movies({movies, onUpdateForm, loading, errorServer, onClickCheckbox, co
         {errorServer && (<p className="movies__not-found">Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз</p>)}
         <MoviesCardList 
         movies={movies}
-        countCards={countCards}  
+        countCards={countCards}
+        onSavedMovies={onSavedMovies} 
+        isSavedMoviesPage ={true}  
         />
         {countCards < movies.length && (
         <ButtonAdd 

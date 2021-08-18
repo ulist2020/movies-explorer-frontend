@@ -33,6 +33,7 @@ function App() {
   const [loggedIn, setloggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
   const [isInfoTooltipOpen, setisInfoTooltipOpen] = useState(false);
+  const [savedMovies, setSavedMovies] = useState([]);
 
   //Фильтр фильма по названию
   const moviesFind = (results, request) => {
@@ -119,16 +120,36 @@ function timeoutResize() {
   setTimeout(countCard, 300);
 };
 
+const moviesMapper = (movies) => {
+  return movies.map((movie) => {
+    return {
+      country: movie.country,
+      director: movie.director,
+      duration: movie.duration,
+      year: movie.year,
+      description: movie.description,
+      image: `https://api.nomoreparties.co${movie.image.url}`,
+      trailer: movie.trailerLink,
+      thumbnail: movie.image ? `https://api.nomoreparties.co${movie.image.formats.thumbnail.url}` : '',
+      nameRU: movie.nameRU ?? "",
+      nameEN: movie.nameEN ?? "",
+      movieId: String(movie.id),
+    }
+  })
+}
   //Отрисовка всех карточек
   useEffect(() => {
     moviesApi.getInitialMovies()
     .then((results) => {
-      setMovies(results)
+      const moviesEntities = moviesMapper(results);
+      setMovies(moviesEntities)
     })
     .catch(() => {
       setErrorServer(true);
     });
   },[]);
+
+
 
 //Отрисовка карточек в зависимости от разрешения экрана
 useEffect(() => {
@@ -232,6 +253,42 @@ function handleLogOut () {
   history.push("/");
 };
 
+function handleSavedMovies({ country,
+  director,
+  duration,
+  year,
+  description,
+  image,
+  trailer,
+  nameRU,
+  nameEN,
+  thumbnail,
+  movieId,
+})  {
+  mainApi.addSaveMovies({ country,
+    director,
+    duration,
+    year,
+    description,
+    image,
+    trailer,
+    nameRU,
+    nameEN,
+    thumbnail,
+    movieId,
+ })
+    .then((results) => {
+      
+        console.log(results.movie)
+        setSavedMovies((item) => [...item, results]);
+      
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -261,6 +318,8 @@ function handleLogOut () {
                       movies={movies}
                       onButtonAdd={handleClickAddCards}
                       countCards={countCards + moreCards}
+                      onSavedMovies={handleSavedMovies}
+                      savedMovies={savedMovies} 
                     />
                   
                   <ProtectedRoute 
@@ -268,6 +327,14 @@ function handleLogOut () {
                       path="/saved-movies"
                       loggedIn={loggedIn}
                       component={SavedMovies}
+                      savedMovies={savedMovies}
+                      loading={loading}
+                      errorServer={errorServer}
+                      onUpdateForm={handleUpdateForm}
+                      onClickCheckbox={handleFilterCheckbox}
+                      movies={movies}
+                      onButtonAdd={handleClickAddCards}
+                      countCards={countCards + moreCards}
                     />
 
                   <ProtectedRoute 

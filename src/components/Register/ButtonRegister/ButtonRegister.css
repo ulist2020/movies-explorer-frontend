@@ -33,6 +33,9 @@
     margin-top: 16px;
     transition: opacity linear 0.5s;
 }
+.but__profile_disabled{
+    color: rgba(0, 0, 0, 0.2);
+}
 
 .but__login{
     padding: 179px 0 70px 0;
