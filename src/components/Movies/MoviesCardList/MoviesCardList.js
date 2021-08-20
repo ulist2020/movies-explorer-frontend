@@ -1,5 +1,4 @@
 import React from 'react';
-import { CurrentUserContext } from '../../../contexts/CurrentUserContext'
 import './MoviesCardList.css';
 import MoviesCard from "../MoviesCard/MoviesCard";
 
@@ -8,32 +7,23 @@ import MoviesCard from "../MoviesCard/MoviesCard";
 }*/
 
 
-function MoviesCardList({movies, countCards, onSavedMovies, isSavedMoviesPage}) {
- /* const currentUser = React.useContext(CurrentUserContext);
-  const isSaved = movies.owner === currentUser._id;*/
-
-  
-  /*const handleLikeClick = () => {
-console.log(movies)    
-        onSavedMovies(movies);
-    
-}*/
-
-
+function MoviesCardList({movies, countCards, onSavedMovies, isSavedMoviesPage, onDeleteMovies, savedMovies}) {
 
   return (
       <div className="list">
         <ul className="list__contaner">
         {movies.slice(0, countCards).map((card)=>
             (<MoviesCard
-              key={card.movieId}
+              key={card._id || card.id || card.movieId}
               image={card.image} 
               nameRU={card.nameRU}
               duration={card.duration}
               owner={card.owner}
               card={card}
               onSavedMovies={onSavedMovies}
+              onDeleteMovies={onDeleteMovies}
               isSavedMoviesPage={isSavedMoviesPage}
+              savedMovies={savedMovies}
           />)
         )}
         </ul>

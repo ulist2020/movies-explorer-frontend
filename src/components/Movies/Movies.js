@@ -4,7 +4,7 @@ import MoviesCardList from "./MoviesCardList/MoviesCardList";
 import Preloader from './Preloader/Preloader';
 import ButtonAdd from "../Movies/ButtonAdd/ButtonAdd";
 
-function Movies({movies, onUpdateForm, loading, errorServer, onClickCheckbox, countCards, onButtonAdd, onSavedMovies}) {
+function Movies({movies, onUpdateForm, loading, errorServer, onClickCheckbox, countCards, onButtonAdd, onSavedMovies, savedMovies, onDeleteMovies}) {
 
   return (
     <div className="movies">
@@ -21,7 +21,9 @@ function Movies({movies, onUpdateForm, loading, errorServer, onClickCheckbox, co
         movies={movies}
         countCards={countCards}
         onSavedMovies={onSavedMovies} 
-        isSavedMoviesPage ={true}  
+        isSavedMoviesPage ={true}
+        savedMovies={savedMovies}
+        onDeleteMovies={onDeleteMovies}  
         />
         {countCards < movies.length && (
         <ButtonAdd 

@@ -35,6 +35,24 @@ function App() {
   const [isInfoTooltipOpen, setisInfoTooltipOpen] = useState(false);
   const [savedMovies, setSavedMovies] = useState([]);
 
+  const moviesForBackend = (movies) => {
+    return movies.map((movie) => {
+      return {
+        country: movie.country,
+        director: movie.director,
+        duration: movie.duration,
+        year: movie.year,
+        description: movie.description,
+        image: `https://api.nomoreparties.co${movie.image.url}`,
+        trailer: movie.trailerLink,
+        thumbnail: movie.image ? `https://api.nomoreparties.co${movie.image.formats.thumbnail.url}` : '',
+        nameRU: movie.nameRU ?? "",
+        nameEN: movie.nameEN ?? "",
+        movieId: String(movie.id),
+      }
+    })
+  }
+
   //Фильтр фильма по названию
   const moviesFind = (results, request) => {
     return results.filter((movie) =>{
@@ -73,7 +91,8 @@ function App() {
     setLoading(true);
      moviesApi.getInitialMovies()
     .then((results) => {
-      setMovies(moviesFind(results, request))
+      const moviesConvert = moviesForBackend(results);
+      setMovies(moviesFind(moviesConvert, request))
       
     })
     .catch(() => {
@@ -89,7 +108,8 @@ function App() {
     setLoading(true);
      moviesApi.getInitialMovies()
     .then((results) => {
-      setMovies(moviesShort(results))
+      const moviesConvert = moviesForBackend(results);
+      setMovies(moviesShort(moviesConvert))
       
     })
     .catch(() => {
@@ -120,29 +140,12 @@ function timeoutResize() {
   setTimeout(countCard, 300);
 };
 
-const moviesMapper = (movies) => {
-  return movies.map((movie) => {
-    return {
-      country: movie.country,
-      director: movie.director,
-      duration: movie.duration,
-      year: movie.year,
-      description: movie.description,
-      image: `https://api.nomoreparties.co${movie.image.url}`,
-      trailer: movie.trailerLink,
-      thumbnail: movie.image ? `https://api.nomoreparties.co${movie.image.formats.thumbnail.url}` : '',
-      nameRU: movie.nameRU ?? "",
-      nameEN: movie.nameEN ?? "",
-      movieId: String(movie.id),
-    }
-  })
-}
   //Отрисовка всех карточек
   useEffect(() => {
     moviesApi.getInitialMovies()
     .then((results) => {
-      const moviesEntities = moviesMapper(results);
-      setMovies(moviesEntities)
+      const moviesConvert = moviesForBackend(results);
+      setMovies(moviesConvert)
     })
     .catch(() => {
       setErrorServer(true);
@@ -200,6 +203,9 @@ function handleLogin(email, password) {
       console.log(`Ошибка: ${err}`);
       setIsAuthSuccess(false);
       handleInfoTooltip();
+    })
+    .finally(() => {
+      handleGetSavedMovies();
     });
 };
 
@@ -216,6 +222,9 @@ useEffect(() => {
       })
       .catch((err) => {
         console.log(`Ошибка: ${err}`);
+      })
+      .finally(() => {
+        handleGetSavedMovies();
       });
   }
 }, [history]);
@@ -253,33 +262,10 @@ function handleLogOut () {
   history.push("/");
 };
 
-function handleSavedMovies({ country,
-  director,
-  duration,
-  year,
-  description,
-  image,
-  trailer,
-  nameRU,
-  nameEN,
-  thumbnail,
-  movieId,
-})  {
-  mainApi.addSaveMovies({ country,
-    director,
-    duration,
-    year,
-    description,
-    image,
-    trailer,
-    nameRU,
-    nameEN,
-    thumbnail,
-    movieId,
- })
+function handleSavedMovies(movie)  {
+  mainApi.addSaveMovies(movie)
     .then((results) => {
       
-        console.log(results.movie)
         setSavedMovies((item) => [...item, results]);
       
     })
@@ -289,6 +275,64 @@ function handleSavedMovies({ country,
 };
 
 
+//Отрисовка всех сохраненных карточек
+const handleGetSavedMovies = () => {
+  mainApi.getInitialCards()
+    .then((res) => {
+      setSavedMovies(res);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+//Поиск короткого сохраненного фильма
+function handleFilterCheckboxSave(){
+  setLoading(true);
+  mainApi.getInitialCards()
+  .then((results) => {
+    setSavedMovies(moviesShort(results))
+    
+  })
+  .catch(() => {
+    setErrorServer(true);
+  })
+  .finally(() => {
+    setLoading(false);
+  });
+}
+
+//Поиск сохраненного фильма по названию
+function handleUpdateFormSave(request){
+  setLoading(true);
+  mainApi.getInitialCards()
+  .then((results) => {
+    setSavedMovies(moviesFind(results, request))
+    
+  })
+  .catch(() => {
+    setErrorServer(true);
+  })
+  .finally(() => {
+    setLoading(false);
+  });
+}
+
+
+const handleDeleteMovies = (id) => {
+  
+  mainApi.deleteCard(id)
+    .then(() => {
+      const newCards = savedMovies.filter((movie) => 
+         movie._id 
+      );
+        setSavedMovies(newCards);
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+};
+
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -296,8 +340,8 @@ function handleSavedMovies({ country,
             
               <Header 
                 handleClick={handleNavPopupClick}
-                email={userEmail.email}                      
-
+                email={userEmail.email}
+                loggedIn={loggedIn}
               />
 
                 <Switch>
@@ -319,7 +363,8 @@ function handleSavedMovies({ country,
                       onButtonAdd={handleClickAddCards}
                       countCards={countCards + moreCards}
                       onSavedMovies={handleSavedMovies}
-                      savedMovies={savedMovies} 
+                      onDeleteMovies={handleDeleteMovies}
+                      savedMovies={savedMovies}
                     />
                   
                   <ProtectedRoute 
@@ -328,13 +373,12 @@ function handleSavedMovies({ country,
                       loggedIn={loggedIn}
                       component={SavedMovies}
                       savedMovies={savedMovies}
+                      onClickCheckbox={handleFilterCheckboxSave}
+                      onUpdateForm={handleUpdateFormSave}
+                      onDeleteMovies={handleDeleteMovies}
                       loading={loading}
                       errorServer={errorServer}
-                      onUpdateForm={handleUpdateForm}
-                      onClickCheckbox={handleFilterCheckbox}
-                      movies={movies}
-                      onButtonAdd={handleClickAddCards}
-                      countCards={countCards + moreCards}
+                      movies={savedMovies}
                     />
 
                   <ProtectedRoute 

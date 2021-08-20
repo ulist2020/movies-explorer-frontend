@@ -84,8 +84,8 @@ class Api {
 }
 
     //Удаление карточки
-    deleteCard(){
-        return fetch(`${this._address}/movies/:movieId`, {
+    deleteCard(card){
+        return fetch(`${this._address}/movies/${card._id}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': this._token,
@@ -105,8 +105,8 @@ class Api {
 }
 
 const mainApi = new Api({
-    //address: 'https://api.julia.smirnova.nomoredomains.club',
-    address: 'http://localhost:3000',
+    address: 'https://api.julia.smirnova.nomoredomains.club',
+    //address: 'http://localhost:3000',
     token: `Bearer ${localStorage.getItem('jwt')}`,
     format: 'application/json'
   }); 
