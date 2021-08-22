@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Route, Switch, useHistory } from "react-router-dom";
 import '../../index.css';
 import './App.css';
+//import checkedShorts from '../Movies/FilterCheckbox/FilterCheckbox';
 import Header from '../Header/Header';
 import Main from '../Main/Main';
 import Movies from '../Movies/Movies';
@@ -21,6 +22,7 @@ import InfoTooltip from "../InfoTooltip/InfoTooltip";
 
 function App() {
   const history = useHistory();
+  let [checkedShorts, setChecked] = useState(false);
   const [isNavPopup, setisNavPopup] = useState(false);
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -35,22 +37,37 @@ function App() {
   const [isInfoTooltipOpen, setisInfoTooltipOpen] = useState(false);
   const [savedMovies, setSavedMovies] = useState([]);
 
-  const moviesForBackend = (movies) => {
-    return movies.map((movie) => {
+  const moviesForBackend = (movies, savedMovies, shorts = false) => {
+    //console.log(checkedShorts)
+    let moviesList = movies.map((movie) => {
+      let savedMovieIndex = savedMovies.findIndex(el => el.movieId === movie.id);
+      let isSaved = false;
+      let savedMovieId = null;
+      if ( savedMovieIndex > -1) {
+        isSaved = true;
+        savedMovieId = savedMovies[savedMovieIndex]._id;
+      }
       return {
-        country: movie.country,
+        country: movie.country ? movie.country : "No country",
         director: movie.director,
         duration: movie.duration,
         year: movie.year,
         description: movie.description,
-        image: `https://api.nomoreparties.co${movie.image.url}`,
+        image:  movie.image,
         trailer: movie.trailerLink,
         thumbnail: movie.image ? `https://api.nomoreparties.co${movie.image.formats.thumbnail.url}` : '',
         nameRU: movie.nameRU ?? "",
         nameEN: movie.nameEN ?? "",
-        movieId: String(movie.id),
+        movieId: movie.id,
+        isSaved: isSaved,
+        savedMovieId: savedMovieId
       }
-    })
+    });
+
+    if (shorts) {
+      moviesList = moviesList.filter(movie => movie.duration <= 40);
+    }
+    return moviesList;
   }
 
   //Фильтр фильма по названию
@@ -91,8 +108,10 @@ function App() {
     setLoading(true);
      moviesApi.getInitialMovies()
     .then((results) => {
-      const moviesConvert = moviesForBackend(results);
-      setMovies(moviesFind(moviesConvert, request))
+      
+      //const moviesConvert = moviesForBackend(results);
+      console.log(results)
+      setMovies(moviesFind(results, request))
       
     })
     .catch(() => {
@@ -105,19 +124,12 @@ function App() {
 
   //Поиск короткого фильма
   function handleFilterCheckbox(){
+    checkedShorts = !checkedShorts;
+    setChecked(checkedShorts);
+
     setLoading(true);
-     moviesApi.getInitialMovies()
-    .then((results) => {
-      const moviesConvert = moviesForBackend(results);
-      setMovies(moviesShort(moviesConvert))
-      
-    })
-    .catch(() => {
-      setErrorServer(true);
-    })
-    .finally(() => {
-      setLoading(false);
-    });
+    showAllCards();
+    setLoading(false);
   }
 
 //Кличество карточек в зависимости от разрешения экрана
@@ -140,16 +152,30 @@ function timeoutResize() {
   setTimeout(countCard, 300);
 };
 
+
+    function showAllCards() {
+      moviesApi.getInitialMovies()
+      .then((results) => {
+        mainApi.getInitialCards()
+        .then((res) => {
+          const moviesConvert = moviesForBackend(results,res,checkedShorts);
+
+          setMovies(moviesConvert);
+          setSavedMovies(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    
+      })
+      .catch(() => {
+        setErrorServer(true);
+      });
+
+    }
   //Отрисовка всех карточек
   useEffect(() => {
-    moviesApi.getInitialMovies()
-    .then((results) => {
-      const moviesConvert = moviesForBackend(results);
-      setMovies(moviesConvert)
-    })
-    .catch(() => {
-      setErrorServer(true);
-    });
+    showAllCards();
   },[]);
 
 
@@ -263,6 +289,7 @@ function handleLogOut () {
 };
 
 function handleSavedMovies(movie)  {
+
   mainApi.addSaveMovies(movie)
     .then((results) => {
       
@@ -271,6 +298,10 @@ function handleSavedMovies(movie)  {
     })
     .catch((err) => {
       console.log(err);
+    })    
+    .finally(() => {
+      showAllCards();
+      //handleGetSavedMovies();
     });
 };
 
@@ -320,16 +351,18 @@ function handleUpdateFormSave(request){
 
 
 const handleDeleteMovies = (id) => {
-  
   mainApi.deleteCard(id)
     .then(() => {
       const newCards = savedMovies.filter((movie) => 
-         movie._id 
+         movie._id !== id
       );
         setSavedMovies(newCards);
     })
     .catch((err) => {
       console.log(err);
+    })
+    .finally(() => {
+      showAllCards();
     })
 };
 
@@ -365,6 +398,7 @@ const handleDeleteMovies = (id) => {
                       onSavedMovies={handleSavedMovies}
                       onDeleteMovies={handleDeleteMovies}
                       savedMovies={savedMovies}
+                      checkedShorts={checkedShorts}
                     />
                   
                   <ProtectedRoute 

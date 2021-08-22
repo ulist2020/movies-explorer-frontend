@@ -1,9 +1,7 @@
 import React from 'react';
-import { CurrentUserContext } from '../../../contexts/CurrentUserContext'
 import './MoviesCard.css';
 
-function MoviesCard({ card, nameRU, image, duration, owner, isSavedMoviesPage, onSavedMovies, onDeleteMovies, savedMovies}) {
-  const currentUser = React.useContext(CurrentUserContext);
+function MoviesCard({ card, nameRU, image, duration, owner, isSavedMoviesPage, onSavedMovies, onDeleteMovies, isSaved}) {
 
 function Time(min) {
   const hours = Math.trunc(min / 60);
@@ -11,21 +9,19 @@ function Time(min) {
   return hours + "ч " + minutes + "м";
 };
 
-const isOwn = savedMovies.some(((i) => (i.owner === currentUser._id)))
-//console.log(savedMovies.some(((i) => (i.owner === currentUser._id))))
 const cardLikeButtonClassName = (
-  `card__like ${isOwn ? 'card__like' : 'card__like_activ'}`
+  `card__like ${isSaved ? 'card__like_activ' : ''}`
 ); 
 
   const handleLikeClick = () => {
-      if (!isOwn) {
-        onDeleteMovies(card);
+      if (isSaved) {
+        onDeleteMovies(card.savedMovieId);
     } else {
         onSavedMovies(card);
     }
   }
   const handleDeleteClick = () => {
-      onDeleteMovies(card);
+      onDeleteMovies(card._id);
   }
 
   function openTrailer(){

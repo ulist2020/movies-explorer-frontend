@@ -72,7 +72,7 @@ class Api {
                 duration: duration,
                 year: year,
                 description: description,
-                image: image,
+                image: 'https://api.nomoreparties.co'+image.url,
                 trailer: trailer,
                 nameRU: nameRU,
                 nameEN: nameEN,
@@ -84,8 +84,8 @@ class Api {
 }
 
     //Удаление карточки
-    deleteCard(card){
-        return fetch(`${this._address}/movies/${card._id}`, {
+    deleteCard(id){
+        return fetch(`${this._address}/movies/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': this._token,
