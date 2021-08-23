@@ -235,7 +235,8 @@ function handleLogin(email, password) {
       setIsAuthSuccess(false);
       handleInfoTooltip();
     })
-    getUser()
+    getUser();
+    showAllCards();
 
 };
 
@@ -280,7 +281,6 @@ useEffect(() => {
 function handleUpdateUser(currentUser) {
   mainApi.editUser(currentUser)
     .then((results) =>{
-      console.log(results)
       setCurrentUser(results);
       handleAuthSuccess(true);
       handleInfoTooltip();

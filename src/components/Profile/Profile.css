@@ -64,6 +64,10 @@
 
 }
 
+.profile__redaction:disabled{
+    color: #424242;
+}
+
 .profile__redaction:hover{
     opacity: 0.6;
 }
