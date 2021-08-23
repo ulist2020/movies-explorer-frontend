@@ -1,27 +1,20 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './Login.css';
 import { Link } from "react-router-dom";
 import ButtonRegister from "../Register/ButtonRegister/ButtonRegister";
 import Logo from "../Logo/Logo";
+import  Validation  from '../../utils/Validation';
+
 
 function Login({onLogin}) {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
 
-  function handleChangeEmail(evt) {
-    setEmail(evt.target.value);
-  }
-
-  function handleChangePassword(evt) {
-    setPassword(evt.target.value);
-  }
+  const {values, handleChange, errors, isValid} = Validation({});
 
   function handleSubmit(evt) {
     evt.preventDefault();
-    if (!email || !password) {
-      return;
+    if (isValid) {
+    onLogin(values.email, values.password);
     }
-    onLogin(email, password);
   }
 
   return (
@@ -32,27 +25,25 @@ function Login({onLogin}) {
         </div>
             <p className="register__description">E-mail</p>
               <input 
-              value={email}
-              onChange={handleChangeEmail} 
-              id="register-email" 
-              className="register__input" 
+              onChange={handleChange} 
+              className={`register__input ${errors && errors["name"] && 'register__input_error'}`}
               name="email" 
-              tape="email" 
+              tape="email"
+              pattern="^((([0-9A-Za-z]{1}[-0-9A-z\.]{0,30}[0-9A-Za-z]?)|([0-9А-Яа-я]{1}[-0-9А-я\.]{0,30}[0-9А-Яа-я]?))@([-A-Za-z]{1,}\.){1,}[-A-Za-z]{2,})$" 
               required/>
-              <span className="register__error" />
+               <span className="register__error">{errors && errors["email"] && errors["email"]}</span>
             <p className="register__description">Пароль</p>
               <input 
-              value={password} 
-              onChange={handleChangePassword} 
-              id="register-password" 
-              className="register__input register__input_error"  
+              onChange={handleChange} 
+              className={`register__input ${errors && errors["name"] && 'register__input_error'}`}  
               name="password" 
               type="password" 
-              minLength="2" 
+              minLength="8" 
               maxLength="20" 
               required/>
-              <span className="register__error register__error_visible">Что-то пошло не так...</span> 
+              <span className="register__error">{errors && errors["password"] && errors["password"]}</span>
                 <ButtonRegister
+                  disabled={!isValid}
                   className="but__login"
                   buttonText="Войти"
                   text="Ещё не зарегистрированы?"

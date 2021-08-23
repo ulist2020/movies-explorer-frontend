@@ -25,7 +25,7 @@ function App() {
   let [checkedShorts, setChecked] = useState(false);
   const [isNavPopup, setisNavPopup] = useState(false);
   const [movies, setMovies] = useState([]);
-  let [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [errorServer, setErrorServer] = useState(false);
   const [countCards, setCountCards] = useState(0);
   const [addCards, setaddCards] = useState(0);
@@ -38,7 +38,6 @@ function App() {
   const [savedMovies, setSavedMovies] = useState([]);
 
   const moviesForBackend = (movies, savedMovies, shorts = false) => {
-    //console.log(checkedShorts)
     let moviesList = movies.map((movie) => {
       let savedMovieIndex = savedMovies.findIndex(el => el.movieId === movie.id);
       let isSaved = false;
@@ -70,7 +69,7 @@ function App() {
     return moviesList;
   }
 
-  //Фильтр фильма по названию
+  //Фильтр фильма по названию и короткого фильма
   const moviesFind = (results, request = null, shorts = false) => {
     let moviesList = movies;
     if (shorts) {
@@ -85,24 +84,6 @@ function App() {
     }
     return moviesList;
   };
-
-  //Фильтр короткого фильма
-  const moviesShort = (results) => {
-    return results.filter((movie) =>{
-      return movie.duration <= 40;
-    });
-  };
-
-  const moviesForSaved = (movies,shorts = false) => {
-    let moviesList = movies;
-    if (shorts) {
-      moviesList = movies.filter((movie) => {
-        return movie.duration <= 40;
-      })
-    }
-    return moviesList;
-  }
-
 
  //Нажатие на кнопку "ещё"
   const handleClickAddCards = () => {
@@ -172,7 +153,6 @@ function timeoutResize() {
   setTimeout(countCard, 300);
 };
 
-
     function showAllCards() {
       setLoading(true);
       moviesApi.getInitialMovies()
@@ -198,9 +178,9 @@ function timeoutResize() {
     }
   //Отрисовка всех карточек
   useEffect(() => {
+    // TODO Если авторизован
     showAllCards();
   },[]);
-
 
 
 //Отрисовка карточек в зависимости от разрешения экрана
@@ -237,7 +217,9 @@ function handleRegister(name, email, password) {
 
 //Авторизация
 function handleLogin(email, password) {
-  auth.authorize(email, password)
+  console.log(email, password);
+
+    auth.authorize(email, password)
      .then((result) => {
       if (result.token) {
         localStorage.setItem("jwt", result.token);
@@ -253,9 +235,8 @@ function handleLogin(email, password) {
       setIsAuthSuccess(false);
       handleInfoTooltip();
     })
-    .finally(() => {
-      handleGetSavedMovies();
-    });
+    getUser()
+
 };
 
 useEffect(() => {
@@ -278,7 +259,7 @@ useEffect(() => {
   }
 }, [history]);
 
-useEffect(() => {
+function getUser (){
   mainApi.getUser()
   .then((results) => {
     setCurrentUser(
@@ -289,6 +270,10 @@ useEffect(() => {
     })
   })
   .catch((err) => console.log(`Ошибка: ${err}`));
+}
+
+useEffect(() => {
+  getUser();
 },[])
 
 //Редактирование пользователя
@@ -340,23 +325,15 @@ const handleGetSavedMovies = () => {
     });
 };
 
-//Поиск короткого сохраненного фильма
-function handleFilterCheckboxSave(){
-  checkedShorts = !checkedShorts;
-  setChecked(checkedShorts);
-
-  setLoading(true);
-  mainApi.getInitialCards()
-  .then((results) => {
-    setSavedMovies(moviesShort(results))
-    
-  })
-  .catch(() => {
-    setErrorServer(true);
-  })
-  .finally(() => {
-    setLoading(false);
-  });
+//Фильтр короткого сохраненного фильма
+const moviesForSaved = (movies,shorts = false) => {
+  let moviesList = movies;
+  if (shorts) {
+    moviesList = movies.filter((movie) => {
+      return movie.duration <= 40;
+    })
+  }
+  return moviesList;
 }
 
 //Поиск сохраненного фильма по названию
