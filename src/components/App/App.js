@@ -25,7 +25,7 @@ function App() {
   let [checkedShorts, setChecked] = useState(false);
   const [isNavPopup, setisNavPopup] = useState(false);
   const [movies, setMovies] = useState([]);
-  const [loading, setLoading] = useState(false);
+  let [loading, setLoading] = useState(false);
   const [errorServer, setErrorServer] = useState(false);
   const [countCards, setCountCards] = useState(0);
   const [addCards, setaddCards] = useState(0);
@@ -71,18 +71,38 @@ function App() {
   }
 
   //Фильтр фильма по названию
-  const moviesFind = (results, request) => {
-    return results.filter((movie) =>{
-      return movie.nameRU.toLowerCase().includes(request.toLowerCase());
-    });
+  const moviesFind = (results, request = null, shorts = false) => {
+    let moviesList = movies;
+    if (shorts) {
+      moviesList = moviesList.filter((movie) => {
+        return movie.duration <= 40;
+      })
+    }
+    if (request) {
+      moviesList = moviesList.filter((movie) => {
+        return movie.nameRU.toLowerCase().includes(request.toLowerCase());
+      })
+    }
+    return moviesList;
   };
 
   //Фильтр короткого фильма
   const moviesShort = (results) => {
     return results.filter((movie) =>{
-    return movie.duration <= 40;
-  });
-};
+      return movie.duration <= 40;
+    });
+  };
+
+  const moviesForSaved = (movies,shorts = false) => {
+    let moviesList = movies;
+    if (shorts) {
+      moviesList = movies.filter((movie) => {
+        return movie.duration <= 40;
+      })
+    }
+    return moviesList;
+  }
+
 
  //Нажатие на кнопку "ещё"
   const handleClickAddCards = () => {
@@ -154,14 +174,14 @@ function timeoutResize() {
 
 
     function showAllCards() {
+      setLoading(true);
       moviesApi.getInitialMovies()
       .then((results) => {
         mainApi.getInitialCards()
         .then((res) => {
           const moviesConvert = moviesForBackend(results,res,checkedShorts);
-
           setMovies(moviesConvert);
-          setSavedMovies(res);
+          setSavedMovies(moviesForSaved(res,checkedShorts));
         })
         .catch((err) => {
           console.log(err);
@@ -170,8 +190,11 @@ function timeoutResize() {
       })
       .catch(() => {
         setErrorServer(true);
+      })
+      .finally(() => {
+        setLoading(false);
       });
-
+    
     }
   //Отрисовка всех карточек
   useEffect(() => {
@@ -319,6 +342,9 @@ const handleGetSavedMovies = () => {
 
 //Поиск короткого сохраненного фильма
 function handleFilterCheckboxSave(){
+  checkedShorts = !checkedShorts;
+  setChecked(checkedShorts);
+
   setLoading(true);
   mainApi.getInitialCards()
   .then((results) => {
@@ -338,7 +364,7 @@ function handleUpdateFormSave(request){
   setLoading(true);
   mainApi.getInitialCards()
   .then((results) => {
-    setSavedMovies(moviesFind(results, request))
+    setSavedMovies(moviesFind(moviesForSaved(results,checkedShorts), request))
     
   })
   .catch(() => {
@@ -407,12 +433,13 @@ const handleDeleteMovies = (id) => {
                       loggedIn={loggedIn}
                       component={SavedMovies}
                       savedMovies={savedMovies}
-                      onClickCheckbox={handleFilterCheckboxSave}
+                      onClickCheckbox={handleFilterCheckbox}
                       onUpdateForm={handleUpdateFormSave}
                       onDeleteMovies={handleDeleteMovies}
                       loading={loading}
                       errorServer={errorServer}
                       movies={savedMovies}
+                      checkedShorts={checkedShorts}
                     />
 
                   <ProtectedRoute 

@@ -3,12 +3,13 @@ import SearchForm from "../Movies/SearchForm/SearchForm";
 import MoviesCardList from "../Movies/MoviesCardList/MoviesCardList";
 import Preloader from '../Movies/Preloader/Preloader';
 
-function SavedMovies({ onUpdateForm, loading, errorServer, onClickCheckbox, countCards, onButtonAdd, savedMovies, onDeleteMovies}) {
+function SavedMovies({ onUpdateForm, loading, errorServer, onClickCheckbox, countCards, onButtonAdd, savedMovies, onDeleteMovies,checkedShorts}) {
   return (
     <div className="movies">
         <SearchForm 
         onUpdateForm={onUpdateForm}
         onClickCheckbox={onClickCheckbox}
+        checkedShorts = {checkedShorts}
           />
         {loading && (<Preloader />)}
         {!savedMovies.length && !errorServer && (
