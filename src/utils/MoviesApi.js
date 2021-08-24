@@ -9,7 +9,18 @@ class Api {
                 'Content-Type': "application/json"
             }
         })
-        .then(this._checkResponse)
+        .then(this._checkResponse);
+        // fetch(this._address, {
+        //     headers: {
+        //         'Content-Type': "application/json"
+        //     }
+        // })
+        // .then((result) => {
+        //     movies = this._checkResponse(result);            
+        // });
+        // localStorage.setItem('allMovies',movies);
+        // console.log(localStorage.getItem('allMovies'))
+        // return movies;
     }
     _checkResponse(res) {
         if (res.ok) {

@@ -7,9 +7,8 @@ class Api {
 
     //Загрузка информации о пользователе с сервера
     getUser(){
-        if (!this._token) {
-            this._token = `Bearer ${localStorage.getItem('jwt')}`;
-        }
+        this._token = `Bearer ${localStorage.getItem('jwt')}`;
+  
         return fetch(`${this._address}/users/me`, {
             headers: {
                 Authorization: this._token,
@@ -40,6 +39,7 @@ class Api {
 
     //Загрузка карточек с сервера
     getInitialCards() {
+        //console.log(localStorage.getItem('jwt'))
         return fetch(`${this._address}/movies`, {
             headers: {
                 Authorization: this._token,

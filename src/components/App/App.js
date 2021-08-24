@@ -33,18 +33,21 @@ function App() {
   const [isAuthSuccess, setIsAuthSuccess] = useState(false);
   const [userEmail, setUserEmail] = useState('');
   const [loggedIn, setloggedIn] = useState(false);
-  const [currentUser, setCurrentUser] = useState({});
+  let  [currentUser, setCurrentUser] = useState({});
   const [isInfoTooltipOpen, setisInfoTooltipOpen] = useState(false);
   const [savedMovies, setSavedMovies] = useState([]);
 
   const moviesForBackend = (movies, savedMovies, shorts = false) => {
     let moviesList = movies.map((movie) => {
-      let savedMovieIndex = savedMovies.findIndex(el => el.movieId === movie.id);
+      let savedMovieIndex = [];
       let isSaved = false;
       let savedMovieId = null;
-      if ( savedMovieIndex > -1) {
-        isSaved = true;
-        savedMovieId = savedMovies[savedMovieIndex]._id;
+      if (savedMovies) {
+        savedMovieIndex = savedMovies.findIndex(el => el.movieId === movie.id && el.owner === currentUser._id);
+        if (savedMovieIndex > -1) {
+          isSaved = true;
+          savedMovieId = savedMovies[savedMovieIndex]._id;
+        }
       }
       return {
         country: movie.country ? movie.country : "No country",
@@ -62,6 +65,7 @@ function App() {
         savedMovieId: savedMovieId
       }
     });
+
 
     if (shorts) {
       moviesList = moviesList.filter(movie => movie.duration <= 40);
@@ -155,30 +159,46 @@ function timeoutResize() {
 
     function showAllCards() {
       setLoading(true);
-      moviesApi.getInitialMovies()
-      .then((results) => {
-        mainApi.getInitialCards()
-        .then((res) => {
-          const moviesConvert = moviesForBackend(results,res,checkedShorts);
-          setMovies(moviesConvert);
-          setSavedMovies(moviesForSaved(res,checkedShorts));
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      if ((Date.now() - localStorage.getItem('lastFetchMovies')) > 1) {
+        localStorage.setItem('lastFetchMovies',Date.now());
+        moviesApi.getInitialMovies()
+        .then((results) => {
+          localStorage.setItem('allMovies',JSON.stringify(results));
+          results = JSON.parse(localStorage.getItem('allMovies'));
+
+          mainApi.getInitialCards()
+          .then((res) => {
+            localStorage.setItem('allSavedMovies',JSON.stringify(res));
+            res = JSON.parse(localStorage.getItem('allSavedMovies'));
     
-      })
-      .catch(() => {
-        setErrorServer(true);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+            const moviesConvert = moviesForBackend(results,res,checkedShorts);
+            setMovies(moviesConvert);
+            setSavedMovies(moviesForSaved(res,checkedShorts));
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      
+        })
+        .catch(() => {
+          setErrorServer(true);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+
+      } else {
+        const results = JSON.parse(localStorage.getItem('allMovies'));
+        const res = JSON.parse(localStorage.getItem('allSavedMovies'));
+        const moviesConvert = moviesForBackend(results,res,checkedShorts);
+        setMovies(moviesConvert);
+        setSavedMovies(moviesForSaved(res,checkedShorts));
+      }
     
     }
   //Отрисовка всех карточек
   useEffect(() => {
-    // TODO Если авторизован
+    localStorage.setItem('lastFetchMovies',0);
     showAllCards();
   },[]);
 
@@ -217,7 +237,7 @@ function handleRegister(name, email, password) {
 
 //Авторизация
 function handleLogin(email, password) {
-  console.log(email, password);
+  //console.log(email, password);
 
     auth.authorize(email, password)
      .then((result) => {
@@ -235,8 +255,16 @@ function handleLogin(email, password) {
       setIsAuthSuccess(false);
       handleInfoTooltip();
     })
-    getUser();
-    showAllCards();
+    .then(() => {
+      getUser()
+
+    })
+    .finally(() => {
+      // const jwt = localStorage.getItem("jwt");
+      showAllCards();
+
+    })
+  
 
 };
 
@@ -263,14 +291,16 @@ useEffect(() => {
 function getUser (){
   mainApi.getUser()
   .then((results) => {
-    setCurrentUser(
-      {
-        _id: results.data._id,
-        name: results.data.name,
-        email: results.data.email,
-    })
+    currentUser = {
+      _id: results.data._id,
+      name: results.data.name,
+      email: results.data.email,
+    }
+    localStorage.setItem('lastFetchMovies',0);
+    setCurrentUser(currentUser);
   })
   .catch((err) => console.log(`Ошибка: ${err}`));
+  
 }
 
 useEffect(() => {
@@ -286,30 +316,29 @@ function handleUpdateUser(currentUser) {
       handleInfoTooltip();
     })
     .catch((err) => console.log(`Ошибка: ${err}`));
-
 }
 
 function handleLogOut () {
-  localStorage.removeItem("jwt");
+  localStorage.clear();
+  setCurrentUser({});
+  setSavedMovies([]);
+  setMovies([]);
   setloggedIn(false);
-  setUserEmail(' ');
   history.push("/");
 };
 
+//Добавление фильма в сохраненные
 function handleSavedMovies(movie)  {
-
   mainApi.addSaveMovies(movie)
     .then((results) => {
-      
         setSavedMovies((item) => [...item, results]);
-      
     })
     .catch((err) => {
       console.log(err);
     })    
     .finally(() => {
+      localStorage.setItem('lastFetchMovies',0);
       showAllCards();
-      //handleGetSavedMovies();
     });
 };
 
@@ -327,11 +356,17 @@ const handleGetSavedMovies = () => {
 
 //Фильтр короткого сохраненного фильма
 const moviesForSaved = (movies,shorts = false) => {
-  let moviesList = movies;
-  if (shorts) {
-    moviesList = movies.filter((movie) => {
-      return movie.duration <= 40;
+  let moviesList=[]
+  if (movies) {
+    moviesList = movies;
+    moviesList = moviesList.filter((movie) => {
+      return movie.owner === currentUser._id;
     })
+    if (shorts) {
+      moviesList = moviesList.filter((movie) => {
+        return movie.duration <= 40;
+      })
+    }
   }
   return moviesList;
 }
@@ -365,6 +400,7 @@ const handleDeleteMovies = (id) => {
       console.log(err);
     })
     .finally(() => {
+      localStorage.setItem('lastFetchMovies',0);
       showAllCards();
     })
 };
