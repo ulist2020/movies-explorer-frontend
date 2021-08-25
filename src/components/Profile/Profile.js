@@ -32,7 +32,8 @@ function Profile({onUpdateUser, onLogout}) {
                   name="name" 
                   tape="text" 
                   minLength="2" 
-                  maxLength="20" 
+                  maxLength="20"
+                  required 
                   />
             </div>
                 <span className="register__error">{errors && errors["name"] && errors["name"]}</span>
@@ -48,7 +49,7 @@ function Profile({onUpdateUser, onLogout}) {
                 minLength="2" 
                 maxLength="20"
                 pattern="^((([0-9A-Za-z]{1}[-0-9A-z\.]{0,30}[0-9A-Za-z]?)|([0-9А-Яа-я]{1}[-0-9А-я\.]{0,30}[0-9А-Яа-я]?))@([-A-Za-z]{1,}\.){1,}[-A-Za-z]{2,})$" 
-                />
+                required/>
             </div>
                 <span className="register__error">{errors && errors["email"] && errors["email"]}</span>
           </div>

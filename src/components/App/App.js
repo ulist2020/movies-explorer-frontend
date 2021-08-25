@@ -74,23 +74,6 @@ function App() {
     setIsAuthSuccess(item);
   }
 
-  //Регистрация
-  function handleRegister(name, email, password) {
-    auth.register(name, email, password)
-      .then((result) => {
-        if (result) {
-          handleAuthSuccess(true);
-          handleInfoTooltip();
-          history.push("/sign-in");
-        }
-      })
-      .catch((err) => {
-        console.log(`Ошибка: ${err}`);
-        handleAuthSuccess(false);
-        handleInfoTooltip();
-      });
-  };
-
   //Авторизация
   function handleLogin(email, password) {
       auth.authorize(email, password)
@@ -117,6 +100,24 @@ function App() {
         showAllCards();
       })
   };
+
+  //Регистрация
+  function handleRegister(name, email, password) {
+    auth.register(name, email, password)
+      .then((result) => {
+        if (result) {
+          handleAuthSuccess(true);
+          handleInfoTooltip();
+          handleLogin(email, password)
+        }
+      })
+      .catch((err) => {
+        console.log(`Ошибка: ${err}`);
+        handleAuthSuccess(false);
+        handleInfoTooltip();
+      });
+  };
+
 
   useEffect(() => {
     const jwt = localStorage.getItem("jwt");
@@ -147,7 +148,6 @@ function App() {
         name: results.data.name,
         email: results.data.email,
       }
-      localStorage.setItem('lastFetchMovies',0);
       setCurrentUser(currentUser);
     })
     .catch((err) => console.log(`Ошибка: ${err}`));
@@ -219,8 +219,8 @@ function App() {
   }
 
   //Фильтр фильма по названию и короткого фильма
-  const moviesFind = (results, request = null, shorts = false) => {
-    let moviesList = movies;
+  const moviesFind = (moviesList, request = null, shorts = false) => {
+    // let moviesList = movies;
     if (shorts) {
       moviesList = moviesList.filter((movie) => {
         return movie.duration <= 40;
@@ -234,22 +234,6 @@ function App() {
     return moviesList;
   };
 
-  //Поиск фильма по названию
-  function handleUpdateForm(request){
-    setLoading(true);
-     moviesApi.getInitialMovies()
-    .then((results) => {
-      console.log(results)
-      setMovies(moviesFind(results, request))
-    })
-    .catch(() => {
-      setErrorServer(true);
-    })
-    .finally(() => {
-      setLoading(false);
-    });
-  }
-
   //Поиск короткого фильма
   function handleFilterCheckbox(){
     checkedShorts = !checkedShorts;
@@ -259,10 +243,15 @@ function App() {
     setLoading(false);
   }
  //Вывод всех фильмов
-  function showAllCards() {
-    setLoading(true);
-      if ((Date.now() - localStorage.getItem('lastFetchMovies')) > 10000) {
-        localStorage.setItem('lastFetchMovies',Date.now());
+  function showAllCards(request = null) {
+    if (request) {
+      localStorage.setItem('searchString',request);
+    } else {
+      request = localStorage.getItem('searchString');
+    }
+      if (localStorage.getItem('lastFetchMovies')==='0') {
+        setLoading(true);
+        localStorage.setItem('lastFetchMovies','1');
         moviesApi.getInitialMovies()
         .then((results) => {
           localStorage.setItem('allMovies',JSON.stringify(results));
@@ -272,8 +261,8 @@ function App() {
             localStorage.setItem('allSavedMovies',JSON.stringify(res));
             res = JSON.parse(localStorage.getItem('allSavedMovies'));
             const moviesConvert = moviesForBackend(results,res,checkedShorts);
-            setMovies(moviesConvert);
-            setSavedMovies(moviesForSaved(res,checkedShorts));
+            setMovies(moviesFind(moviesConvert, request))
+            setSavedMovies(moviesFind(moviesForSaved(res,checkedShorts), request))
           })
           .catch((err) => {
             console.log(err);
@@ -289,14 +278,15 @@ function App() {
         const results = JSON.parse(localStorage.getItem('allMovies'));
         const res = JSON.parse(localStorage.getItem('allSavedMovies'));
         const moviesConvert = moviesForBackend(results,res,checkedShorts);
-        setMovies(moviesConvert);
-        setSavedMovies(moviesForSaved(res,checkedShorts));
-      }
+        setMovies(moviesFind(moviesConvert, request))
+        setSavedMovies(moviesFind(moviesForSaved(res,checkedShorts), request))
+  }
     }
 
   //Отрисовка всех карточек в зависимости от разрешения экрана + юзера
   useEffect(() => {
-    localStorage.setItem('lastFetchMovies',0);
+    localStorage.setItem('searchString','');
+    localStorage.setItem('lastFetchMovies','0');
     showAllCards();
     countCard();
     getUser();
@@ -312,7 +302,7 @@ function App() {
         console.log(err);
       })    
       .finally(() => {
-        localStorage.setItem('lastFetchMovies',0);
+        localStorage.setItem('lastFetchMovies','0');
         showAllCards();
       });
   };
@@ -345,21 +335,6 @@ function App() {
     return moviesList;
   }
 
-  //Поиск сохраненного фильма по названию
-  function handleUpdateFormSave(request){
-    setLoading(true);
-    mainApi.getInitialCards()
-    .then((results) => {
-      setSavedMovies(moviesFind(moviesForSaved(results,checkedShorts), request))
-    })
-    .catch(() => {
-      setErrorServer(true);
-    })
-    .finally(() => {
-      setLoading(false);
-    });
-  }
-
 //Удаление фильма из сохраненных
   const handleDeleteMovies = (id) => {
     mainApi.deleteCard(id)
@@ -373,7 +348,7 @@ function App() {
         console.log(err);
       })
       .finally(() => {
-        localStorage.setItem('lastFetchMovies',0);
+        localStorage.setItem('lastFetchMovies','0');
         showAllCards();
       })
   };
@@ -401,7 +376,7 @@ function App() {
                       component={Movies} 
                       loading={loading}
                       errorServer={errorServer}
-                      onUpdateForm={handleUpdateForm}
+                      onUpdateForm={showAllCards}
                       onClickCheckbox={handleFilterCheckbox}
                       movies={movies}
                       onButtonAdd={handleClickAddCards}
@@ -419,7 +394,7 @@ function App() {
                       component={SavedMovies}
                       savedMovies={savedMovies}
                       onClickCheckbox={handleFilterCheckbox}
-                      onUpdateForm={handleUpdateFormSave}
+                      onUpdateForm={showAllCards}
                       onDeleteMovies={handleDeleteMovies}
                       loading={loading}
                       errorServer={errorServer}
