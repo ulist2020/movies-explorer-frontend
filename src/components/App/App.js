@@ -97,6 +97,7 @@ function App() {
 
       })
       .finally(() => {
+        localStorage.setItem('lastFetchMovies','0');
         showAllCards();
       })
   };
