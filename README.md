@@ -1,6 +1,6 @@
 # Дипломная работа. Фронтенд
 ------
-_Запросы на фронтенд по адресу https://julia.smirnova.nomoredomains.club    
+_Запросы на фронтенд по адресу https://julia.smirnova.nomoredomains.monster    
 Публичный IP адрес сервера 130.193.53.229  
 Ссылка на макет https://www.figma.com/file/ifJc3p65pC5CuWA88KEGVS/Диплом?node-id=344%3A0_    
 
