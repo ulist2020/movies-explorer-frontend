@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Route, Switch, useHistory } from "react-router-dom";
 import '../../index.css';
 import './App.css';
-//import checkedShorts from '../Movies/FilterCheckbox/FilterCheckbox';
 import Header from '../Header/Header';
 import Main from '../Main/Main';
 import Movies from '../Movies/Movies';
@@ -65,29 +64,141 @@ function App() {
         savedMovieId: savedMovieId
       }
     });
-
-
     if (shorts) {
       moviesList = moviesList.filter(movie => movie.duration <= 40);
     }
     return moviesList;
   }
 
-  //Фильтр фильма по названию и короткого фильма
-  const moviesFind = (results, request = null, shorts = false) => {
-    let moviesList = movies;
-    if (shorts) {
-      moviesList = moviesList.filter((movie) => {
-        return movie.duration <= 40;
+  function handleAuthSuccess(item) {
+    setIsAuthSuccess(item);
+  }
+
+  //Регистрация
+  function handleRegister(name, email, password) {
+    auth.register(name, email, password)
+      .then((result) => {
+        if (result) {
+          handleAuthSuccess(true);
+          handleInfoTooltip();
+          history.push("/sign-in");
+        }
       })
-    }
-    if (request) {
-      moviesList = moviesList.filter((movie) => {
-        return movie.nameRU.toLowerCase().includes(request.toLowerCase());
-      })
-    }
-    return moviesList;
+      .catch((err) => {
+        console.log(`Ошибка: ${err}`);
+        handleAuthSuccess(false);
+        handleInfoTooltip();
+      });
   };
+
+  //Авторизация
+  function handleLogin(email, password) {
+      auth.authorize(email, password)
+      .then((result) => {
+        if (result.token) {
+          localStorage.setItem("jwt", result.token);
+          setUserEmail({
+            email: email,
+          });
+          setloggedIn(true);
+          history.push("/movies");
+        }
+      })
+      .catch((err) => {
+        console.log(`Ошибка: ${err}`);
+        setIsAuthSuccess(false);
+        handleInfoTooltip();
+      })
+      .then(() => {
+        getUser()
+
+      })
+      .finally(() => {
+        showAllCards();
+      })
+  };
+
+  useEffect(() => {
+    const jwt = localStorage.getItem("jwt");
+    if (jwt) {
+      auth.getContent(jwt)
+        .then((result) => {
+          setUserEmail({
+              email: result.data.email
+          })
+            setloggedIn(true);
+            history.push("/movies");
+        })
+        .catch((err) => {
+          console.log(`Ошибка: ${err}`);
+        })
+        .finally(() => {
+          handleGetSavedMovies();
+        });
+    }
+  }, [history]);
+
+  //Вывод пользователя
+  function getUser (){
+    mainApi.getUser()
+    .then((results) => {
+      currentUser = {
+        _id: results.data._id,
+        name: results.data.name,
+        email: results.data.email,
+      }
+      localStorage.setItem('lastFetchMovies',0);
+      setCurrentUser(currentUser);
+    })
+    .catch((err) => console.log(`Ошибка: ${err}`));
+  }
+
+  //Редактирование пользователя
+  function handleUpdateUser(currentUser) {
+    mainApi.editUser(currentUser)
+      .then((results) =>{
+        setCurrentUser(results);
+        handleAuthSuccess(true);
+        handleInfoTooltip();
+      })
+      .catch((err) => console.log(`Ошибка: ${err}`));
+  }
+
+  //Выход из аккаунта
+  function handleLogOut () {
+    localStorage.clear();
+    setCurrentUser({});
+    setSavedMovies([]);
+    setMovies([]);
+    setloggedIn(false);
+    history.push("/");
+  };
+
+   //Кличество карточек в зависимости от разрешения экрана
+  function countCard() {
+    if (window.innerWidth >= 1024) {
+      setCountCards(12);
+      setaddCards(4);
+    }
+    if (window.innerWidth <= 1023 && window.innerWidth >= 768) {
+      setCountCards(8);
+      setaddCards(2);
+    }
+    if (window.innerWidth <= 480 && window.innerWidth >= 320) {
+      setCountCards(5);
+      setaddCards(2);
+    }
+  }
+
+  function timeoutResize() {
+    setTimeout(countCard, 300);
+  };
+
+   //Изменение ширины экрана
+  useEffect(() => {
+    window.addEventListener("resize", timeoutResize);
+    return () => window.removeEventListener('resize', timeoutResize);
+  },);
 
  //Нажатие на кнопку "ещё"
   const handleClickAddCards = () => {
@@ -107,17 +218,29 @@ function App() {
     setisInfoTooltipOpen(false);
   }
 
+  //Фильтр фильма по названию и короткого фильма
+  const moviesFind = (results, request = null, shorts = false) => {
+    let moviesList = movies;
+    if (shorts) {
+      moviesList = moviesList.filter((movie) => {
+        return movie.duration <= 40;
+      })
+    }
+    if (request) {
+      moviesList = moviesList.filter((movie) => {
+        return movie.nameRU.toLowerCase().includes(request.toLowerCase());
+      })
+    }
+    return moviesList;
+  };
 
   //Поиск фильма по названию
   function handleUpdateForm(request){
     setLoading(true);
      moviesApi.getInitialMovies()
     .then((results) => {
-      
-      //const moviesConvert = moviesForBackend(results);
       console.log(results)
       setMovies(moviesFind(results, request))
-      
     })
     .catch(() => {
       setErrorServer(true);
@@ -131,46 +254,23 @@ function App() {
   function handleFilterCheckbox(){
     checkedShorts = !checkedShorts;
     setChecked(checkedShorts);
-
     setLoading(true);
     showAllCards();
     setLoading(false);
   }
-
-//Кличество карточек в зависимости от разрешения экрана
-function countCard() {
-  if (window.innerWidth >= 1024) {
-    setCountCards(12);
-    setaddCards(4);
-  }
-  if (window.innerWidth <= 1023 && window.innerWidth >= 768) {
-    setCountCards(8);
-    setaddCards(2);
-  }
-  if (window.innerWidth <= 480 && window.innerWidth >= 320) {
-    setCountCards(5);
-    setaddCards(2);
-  }
-}
-
-function timeoutResize() {
-  setTimeout(countCard, 300);
-};
-
-    function showAllCards() {
-      setLoading(true);
-      if ((Date.now() - localStorage.getItem('lastFetchMovies')) > 1) {
+ //Вывод всех фильмов
+  function showAllCards() {
+    setLoading(true);
+      if ((Date.now() - localStorage.getItem('lastFetchMovies')) > 10000) {
         localStorage.setItem('lastFetchMovies',Date.now());
         moviesApi.getInitialMovies()
         .then((results) => {
           localStorage.setItem('allMovies',JSON.stringify(results));
           results = JSON.parse(localStorage.getItem('allMovies'));
-
           mainApi.getInitialCards()
           .then((res) => {
             localStorage.setItem('allSavedMovies',JSON.stringify(res));
             res = JSON.parse(localStorage.getItem('allSavedMovies'));
-    
             const moviesConvert = moviesForBackend(results,res,checkedShorts);
             setMovies(moviesConvert);
             setSavedMovies(moviesForSaved(res,checkedShorts));
@@ -178,7 +278,6 @@ function timeoutResize() {
           .catch((err) => {
             console.log(err);
           });
-      
         })
         .catch(() => {
           setErrorServer(true);
@@ -186,7 +285,6 @@ function timeoutResize() {
         .finally(() => {
           setLoading(false);
         });
-
       } else {
         const results = JSON.parse(localStorage.getItem('allMovies'));
         const res = JSON.parse(localStorage.getItem('allSavedMovies'));
@@ -194,217 +292,91 @@ function timeoutResize() {
         setMovies(moviesConvert);
         setSavedMovies(moviesForSaved(res,checkedShorts));
       }
-    
     }
-  //Отрисовка всех карточек
+
+  //Отрисовка всех карточек в зависимости от разрешения экрана + юзера
   useEffect(() => {
     localStorage.setItem('lastFetchMovies',0);
     showAllCards();
+    countCard();
+    getUser();
   },[]);
 
-
-//Отрисовка карточек в зависимости от разрешения экрана
-useEffect(() => {
-  countCard();
-}, []);
-
-//Изменение ширины экрана
-useEffect(() => {
-  window.addEventListener("resize", timeoutResize);
-  return () => window.removeEventListener('resize', timeoutResize);
-},);
-
-function handleAuthSuccess(item) {
-  setIsAuthSuccess(item);
-}
-
-//Регистрация
-function handleRegister(name, email, password) {
-  auth.register(name, email, password)
-     .then((result) => {
-      if (result) {
-        handleAuthSuccess(true);
-        handleInfoTooltip();
-        history.push("/sign-in");
-      }
-    })
-    .catch((err) => {
-      console.log(`Ошибка: ${err}`);
-      handleAuthSuccess(false);
-      handleInfoTooltip();
-    });
-};
-
-//Авторизация
-function handleLogin(email, password) {
-  //console.log(email, password);
-
-    auth.authorize(email, password)
-     .then((result) => {
-      if (result.token) {
-        localStorage.setItem("jwt", result.token);
-        setUserEmail({
-          email: email,
-        });
-        setloggedIn(true);
-        history.push("/movies");
-      }
-    })
-    .catch((err) => {
-      console.log(`Ошибка: ${err}`);
-      setIsAuthSuccess(false);
-      handleInfoTooltip();
-    })
-    .then(() => {
-      getUser()
-
-    })
-    .finally(() => {
-      // const jwt = localStorage.getItem("jwt");
-      showAllCards();
-
-    })
-  
-
-};
-
-useEffect(() => {
-  const jwt = localStorage.getItem("jwt");
-  if (jwt) {
-    auth.getContent(jwt)
-      .then((result) => {
-         setUserEmail({
-             email: result.data.email
-         })
-          setloggedIn(true);
-          history.push("/movies");
+  //Добавление фильма в сохраненные
+  function handleSavedMovies(movie)  {
+    mainApi.addSaveMovies(movie)
+      .then((results) => {
+          setSavedMovies((item) => [...item, results]);
       })
       .catch((err) => {
-        console.log(`Ошибка: ${err}`);
+        console.log(err);
+      })    
+      .finally(() => {
+        localStorage.setItem('lastFetchMovies',0);
+        showAllCards();
+      });
+  };
+
+  //Отрисовка всех сохраненных карточек
+  const handleGetSavedMovies = () => {
+    mainApi.getInitialCards()
+      .then((res) => {
+        setSavedMovies(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  //Фильтр короткого сохраненного фильма
+  const moviesForSaved = (movies,shorts = false) => {
+    let moviesList=[]
+    if (movies) {
+      moviesList = movies;
+      moviesList = moviesList.filter((movie) => {
+        return movie.owner === currentUser._id;
+      })
+      if (shorts) {
+        moviesList = moviesList.filter((movie) => {
+          return movie.duration <= 40;
+        })
+      }
+    }
+    return moviesList;
+  }
+
+  //Поиск сохраненного фильма по названию
+  function handleUpdateFormSave(request){
+    setLoading(true);
+    mainApi.getInitialCards()
+    .then((results) => {
+      setSavedMovies(moviesFind(moviesForSaved(results,checkedShorts), request))
+    })
+    .catch(() => {
+      setErrorServer(true);
+    })
+    .finally(() => {
+      setLoading(false);
+    });
+  }
+
+//Удаление фильма из сохраненных
+  const handleDeleteMovies = (id) => {
+    mainApi.deleteCard(id)
+      .then(() => {
+        const newCards = savedMovies.filter((movie) => 
+          movie._id !== id
+        );
+          setSavedMovies(newCards);
+      })
+      .catch((err) => {
+        console.log(err);
       })
       .finally(() => {
-        handleGetSavedMovies();
-      });
-  }
-}, [history]);
-
-function getUser (){
-  mainApi.getUser()
-  .then((results) => {
-    currentUser = {
-      _id: results.data._id,
-      name: results.data.name,
-      email: results.data.email,
-    }
-    localStorage.setItem('lastFetchMovies',0);
-    setCurrentUser(currentUser);
-  })
-  .catch((err) => console.log(`Ошибка: ${err}`));
-  
-}
-
-useEffect(() => {
-  getUser();
-},[])
-
-//Редактирование пользователя
-function handleUpdateUser(currentUser) {
-  mainApi.editUser(currentUser)
-    .then((results) =>{
-      setCurrentUser(results);
-      handleAuthSuccess(true);
-      handleInfoTooltip();
-    })
-    .catch((err) => console.log(`Ошибка: ${err}`));
-}
-
-function handleLogOut () {
-  localStorage.clear();
-  setCurrentUser({});
-  setSavedMovies([]);
-  setMovies([]);
-  setloggedIn(false);
-  history.push("/");
-};
-
-//Добавление фильма в сохраненные
-function handleSavedMovies(movie)  {
-  mainApi.addSaveMovies(movie)
-    .then((results) => {
-        setSavedMovies((item) => [...item, results]);
-    })
-    .catch((err) => {
-      console.log(err);
-    })    
-    .finally(() => {
-      localStorage.setItem('lastFetchMovies',0);
-      showAllCards();
-    });
-};
-
-
-//Отрисовка всех сохраненных карточек
-const handleGetSavedMovies = () => {
-  mainApi.getInitialCards()
-    .then((res) => {
-      setSavedMovies(res);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-};
-
-//Фильтр короткого сохраненного фильма
-const moviesForSaved = (movies,shorts = false) => {
-  let moviesList=[]
-  if (movies) {
-    moviesList = movies;
-    moviesList = moviesList.filter((movie) => {
-      return movie.owner === currentUser._id;
-    })
-    if (shorts) {
-      moviesList = moviesList.filter((movie) => {
-        return movie.duration <= 40;
+        localStorage.setItem('lastFetchMovies',0);
+        showAllCards();
       })
-    }
-  }
-  return moviesList;
-}
-
-//Поиск сохраненного фильма по названию
-function handleUpdateFormSave(request){
-  setLoading(true);
-  mainApi.getInitialCards()
-  .then((results) => {
-    setSavedMovies(moviesFind(moviesForSaved(results,checkedShorts), request))
-    
-  })
-  .catch(() => {
-    setErrorServer(true);
-  })
-  .finally(() => {
-    setLoading(false);
-  });
-}
-
-
-const handleDeleteMovies = (id) => {
-  mainApi.deleteCard(id)
-    .then(() => {
-      const newCards = savedMovies.filter((movie) => 
-         movie._id !== id
-      );
-        setSavedMovies(newCards);
-    })
-    .catch((err) => {
-      console.log(err);
-    })
-    .finally(() => {
-      localStorage.setItem('lastFetchMovies',0);
-      showAllCards();
-    })
-};
-
+  };
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -493,7 +465,6 @@ const handleDeleteMovies = (id) => {
                 onClose={closePopup}
                 isSuccess={isAuthSuccess}
               />
-              
             </div>
             </CurrentUserContext.Provider>     
   )

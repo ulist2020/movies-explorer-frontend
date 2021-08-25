@@ -1,13 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import './Profile.css';
 import  Validation  from '../../utils/Validation';
 
 
 function Profile({onUpdateUser, onLogout}) {
-    /*const [name, setName] = useState("");
-    const [email, setEmail] = useState("");*/
-
     const currentUser = React.useContext(CurrentUserContext);
 
     const {values, handleChange, errors, isValid} = Validation({
@@ -15,20 +12,6 @@ function Profile({onUpdateUser, onLogout}) {
       email: currentUser.email
     });
 
-    // Подписка на контекст
-    // После загрузки текущего пользователя из API
-    // его данные будут использованы в управляемых компонентах.
-    /*useEffect(() => {
-    setName(currentUser.name);
-    setEmail(currentUser.email);
-    }, [currentUser]);*/
-
-    /*function handleChangeName(e) {
-        setName(e.target.value);
-    }
-    function handleChangeEmail(e) {
-      setEmail(e.target.value);
-    }*/
     function handleSubmit(e) {
         e.preventDefault();
         if (isValid) {
