@@ -357,7 +357,6 @@ function App() {
   return (
     <CurrentUserContext.Provider value={currentUser}>
           <div className="app">
-            
               <Header 
                 handleClick={handleNavPopupClick}
                 email={userEmail.email}
