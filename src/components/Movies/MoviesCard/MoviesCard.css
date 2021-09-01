@@ -42,7 +42,7 @@
     transition: all .5s ease;
 }
 
-.card__like-saved:hover{
+.card:hover .card__like-saved{
     opacity: 1;
 }
 

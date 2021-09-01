@@ -203,7 +203,9 @@ function App() {
 
  //Нажатие на кнопку "ещё"
   const handleClickAddCards = () => {
+    setLoading(true);
     setMoreCards(moreCards + addCards);
+    setLoading(false);
   };
 
   function handleNavPopupClick() {
@@ -221,7 +223,6 @@ function App() {
 
   //Фильтр фильма по названию и короткого фильма
   const moviesFind = (moviesList, request = null, shorts = false) => {
-    // let moviesList = movies;
     if (shorts) {
       moviesList = moviesList.filter((movie) => {
         return movie.duration <= 40;
@@ -251,7 +252,7 @@ function App() {
       request = localStorage.getItem('searchString');
     }
       if (localStorage.getItem('lastFetchMovies')==='0') {
-        setLoading(true);
+        //setLoading(true);
         localStorage.setItem('lastFetchMovies','1');
         moviesApi.getInitialMovies()
         .then((results) => {
@@ -272,9 +273,9 @@ function App() {
         .catch(() => {
           setErrorServer(true);
         })
-        .finally(() => {
-          setLoading(false);
-        });
+       // .finally(() => {
+         // setLoading(false);
+       // });
       } else {
         const results = JSON.parse(localStorage.getItem('allMovies'));
         const res = JSON.parse(localStorage.getItem('allSavedMovies'));
@@ -312,7 +313,9 @@ function App() {
   const handleGetSavedMovies = () => {
     mainApi.getInitialCards()
       .then((res) => {
+        setLoading(true);
         setSavedMovies(res);
+        setLoading(false);
       })
       .catch((err) => {
         console.log(err);
