@@ -163,6 +163,8 @@ function App() {
         handleInfoTooltip();
       })
       .catch((err) => console.log(`Ошибка: ${err}`));
+        handleAuthSuccess(false);
+        handleInfoTooltip();
   }
 
   //Выход из аккаунта
@@ -244,6 +246,7 @@ function App() {
     showAllCards();
     setLoading(false);
   }
+
  //Вывод всех фильмов
   function showAllCards(request = null) {
     if (request) {
@@ -292,6 +295,7 @@ function App() {
     showAllCards();
     countCard();
     getUser();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   },[]);
 
   //Добавление фильма в сохраненные
