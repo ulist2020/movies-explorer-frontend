@@ -4,7 +4,7 @@ import { Route, Link, Switch, useLocation } from "react-router-dom";
 import Navigation from "../Navigation/Navigation";
 import Logo from "../Logo/Logo";
 
-function Header(props) {
+function Header({loggedIn, handleClick}) {
     const location = useLocation();
   return (
         <header className={`header ${(location.pathname === "/sign-up" 
@@ -12,6 +12,7 @@ function Header(props) {
         ${location.pathname=== "/" && "header"}`}>
             <Switch>
                 <Route exact path="/"> 
+                {!loggedIn && (
                     <div className="header__contaner">     
                         <Link to="/"><Logo /></Link>
                             <div className="header__block">
@@ -23,10 +24,14 @@ function Header(props) {
                                 </Link>
                         </div>
                     </div>
+                    )}
+                    {loggedIn && (
+                      <Navigation />
+                    )}
                 </Route>
                 <Route path="/movies">
                     <Navigation
-                    handleClick={props.handleClick}
+                    handleClick={handleClick}
                     
                     />
                 </Route>

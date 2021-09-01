@@ -33,6 +33,11 @@
     margin-top: 16px;
     transition: opacity linear 0.5s;
 }
+.but__profile:disabled{
+    background-color: #202020;
+    border: 2px solid#4285F4;
+    color: #4285F4;
+}
 
 .but__login{
     padding: 179px 0 70px 0;

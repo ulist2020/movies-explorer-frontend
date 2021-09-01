@@ -1,9 +1,9 @@
 import './ButtonAdd.css';
 
-function ButtonAdd() {
+function ButtonAdd({onButtonAdd}) {
   return (
       <div className="button">
-        <button  className="button__add">Ещё</button>
+        <button  className="button__add" onClick={onButtonAdd}>Ещё</button>
     </div>
   )
 }

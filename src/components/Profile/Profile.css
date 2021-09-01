@@ -58,6 +58,14 @@
     line-height: 16px;
     cursor: pointer;
     transition: opacity linear 0.5s;
+    border: none;
+    background-color: #202020;
+    color:#FFFFFF
+
+}
+
+.profile__redaction:disabled{
+    color: #424242;
 }
 
 .profile__redaction:hover{
@@ -73,6 +81,9 @@
     color: #EE3465;
     cursor: pointer;
     transition: opacity linear 0.5s;
+    border: none;
+    background-color: #202020;
+
 }
 
 .profile__out:hover{

@@ -36,6 +36,15 @@
     background-image: url(../../../images/like_activ.png); 
 }
 
+.card__like-saved{
+    background-image: url(../../../images/dislike.png);
+    opacity: 0;
+    transition: all .5s ease;
+}
+
+.card:hover .card__like-saved{
+    opacity: 1;
+}
 
 .card__time{
     margin: 29px 0 0 0;
