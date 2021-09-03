@@ -2,7 +2,7 @@ import './Promo.css';
 import image from '../../../images/world.png';
 
 function handleScroll(){
-  document.querySelector(".project").scrollIntoView();
+  document.querySelector(".about").scrollIntoView();
 }
 
 function Promo() {

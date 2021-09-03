@@ -6,16 +6,16 @@ function Portfolio() {
           <h2 className="portfolio__header">Портфолио</h2>
           <ul className="portfolio__list">
               <li className="portfolio__block">
-                  <p className="portfolio__name">Статичный сайт</p>
-                  <a href="https://github.com/ulist2020" className="portfolio__link">↗</a>
+                  <p className="portfolio__name">Дипломный проект (Frontend)</p>
+                  <a href="https://github.com/ulist2020/movies-explorer-frontend" className="portfolio__link">↗</a>
               </li>
               <li className="portfolio__block">
-                  <p className="portfolio__name">Адаптивный сайт</p>
-                  <a href="https://github.com/ulist2020" className="portfolio__link">↗</a>
+                  <p className="portfolio__name">Дипломный проект (Backend)</p>
+                  <a href="https://github.com/ulist2020/movies-explorer-api" className="portfolio__link">↗</a>
               </li>
               <li className="portfolio__block portfolio__block-line">
-                  <p className="portfolio__name">Одностраничное приложение</p>
-                  <a href="https://github.com/ulist2020" className="portfolio__link">↗</a>
+                  <p className="portfolio__name">Учебный проект</p>
+                  <a href="https://github.com/ulist2020/react-mesto-api-full" className="portfolio__link">↗</a>
               </li>
           </ul>
       </section>
