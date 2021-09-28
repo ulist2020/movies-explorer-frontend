@@ -1,6 +1,7 @@
 # Дипломная работа. Фронтенд
 ------
-_Ссылка на макет https://www.figma.com/file/ifJc3p65pC5CuWA88KEGVS/Диплом?node-id=344%3A0_    
+_Ссылка на сайт http://diplom.ulist.project-hub.ru  
+Ссылка на макет https://www.figma.com/file/ifJc3p65pC5CuWA88KEGVS/Диплом?node-id=344%3A0_    
 
 ## Функционал проекта
 
