@@ -108,7 +108,7 @@ class Api {
 }
 
 const mainApi = new Api({
-    address: 'https://api.julia.smirnova.nomoredomains.club',
+    address: 'http://api.diplom.ulist.project-hub.ru',
     //address: 'http://localhost:3000',
     token: `Bearer ${localStorage.getItem('jwt')}`,
     format: 'application/json'

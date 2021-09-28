@@ -56,7 +56,7 @@
 }
 
 @media screen and (max-width: 900px){
-    .popup__cont-but{
+    .popup__cont{
         width: 282px;
         height: 322px;
     }
